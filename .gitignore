@@ -1,10 +1,5 @@
 # Ignore everything
 *
-# But descend into directories
-#!*/
-# Recursively allow files under subtree
-#!/subtree/**
-# You can be specific with these rules
-#!/some/other/deep/path/**
+# But not these files 
 !.gitignore 
 !archinstall.sh
