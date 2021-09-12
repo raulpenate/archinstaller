@@ -1,11 +1,13 @@
 #!/bin/bash
 
 #SCRIPT MADE BY raulpenate
-#This is a personal script, use it by your own risk
+echo -e "This is a personal script, use it by your own risk"
+echo -e "Write: I agree"
+echo -e "To continue"
 
 READ $AGREEING
 
-if [$AGREEING === "I agree"]; then
+if ["$AGREEING" === "I agree" || "i agree" || "I AGREE"]; then
 
     #Use timedatectl to ensure the system clock is accurate:
     timedatectl set-ntp true
@@ -41,13 +43,29 @@ if [$AGREEING === "I agree"]; then
     echo -e "in this case LANG=en_US.UTF-8"
     echo -e "LANG=en_US.UTF-8" >>/etc/locale.conf
 
-    #Create the hostname file:
-    printf "\033c"
-    echo -e "==========================================
-Insert your HOSTNAME (or how you wanna name your computer)
-=========================================="
-    read HOSTNAME
-    echo -e $HOSTNAME >>/etc/hostname
+    #If u insert ur user ends
+    $CONFIRMATIONTRUE = true
+    while ["$CONFIRMATIONTRUE" = true]; do
+        $HOSTNAME = ""
+        printf "\033c"
+        echo -e "=========================================================="
+        echo -e "Insert your HOSTNAME (or how you wanna name your computer)"
+        echo -e "=========================================================="
+        read $HOSTNAME
+
+        echo -e "==========="
+        echo -e "Are you sure? (y/n)"
+        echo -e "==========="
+        read $CONFIRMATION
+
+        if [ "$CONFIRMATION" = "y" || "Y" || "yes" || "YES" ]; then
+            $CONFIRMATIONTRUE = false
+            #Create the hostname file:
+            printf "\033c"
+            echo -e $HOSTNAME >>/etc/hostname
+        fi
+
+    done
 
     #Add matching entries to hosts(5):
     echo -e "\n-----------------------------------"
@@ -75,52 +93,79 @@ Insert your HOSTNAME (or how you wanna name your computer)
     #fonts
     # agregarpolybar fonts https://github.com/adi1090x/polybar-themes
     #Utilities
-    pacman -s --noconfirm tilix google-chrome firefox simplescreenrecorder obs-studio vlc papirus-icon-theme
+    pacman -S --noconfirm tilix google-chrome firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git
 
     #Installing i3wm-gaps
-    pacman -Syyu pacman -S i3-gaps, dmenu, nitrogen, termite, firefox, git, curl, man-db
+    pacman -S pacman --noconfirm -S xorg i3-gaps dmenu nitrogen termite curl man-db
 
-    #Installing BSPWM
-    pacman -S --noconfirm xorg bspwm sxhkd picom nitrogen feh pcmanfm ranger polybar rofi
-
-    #Configuring bspwm
-    echo -e "exec bpswm &&\nsxhkdrc" >>.xinitrc
-    mkdir ~/.config/bspwm
-
-    #Installing GNOME
-    pacman -S --noconfirm xorg
+    #I3wm Utilities
+    pacman -S --noconfirm picom nitrogen feh pcmanfm ranger polybar rofi
 
     #Enable systemd process
     systemctl enable NetworkManager
 
-    #INSTALLING GRUB
-    #BIOS systems
-    grub-install --recheck /dev/sda
-
-    #UEFI systems
-    grub-mkconfig -o /boot/grub/grub.cfg
-
-    #Installing the directory in GRUB
-    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
-
     #Create your root password
-    printf "\033c"
-    echo -e "==========================================
-Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)
-=========================================="
-    passwd
+    $CONFIRMATIONTRUE = true
+    while ["$CONFIRMATIONTRUE" = true]; do
+        printf "\033c"
+        echo -e "=================================================="
+        echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
+        echo -e "=================================================="
+        passwd
+
+        echo -e "==========="
+        echo -e "Are you sure? (y/n)"
+        echo -e "==========="
+        read $CONFIRMATION
+
+        if [ "$CONFIRMATION" = "y" || "Y" || "yes" || "YES" ]; then
+            $CONFIRMATIONTRUE = false
+        fi
+
+    done
 
     #Create your user
-    printf "\033c"
-    echo -e "==========================================
-Insert your USERNAME (yes your username, will be in wheel group)
-=========================================="
-    read $CREATEUSERNAME
-    useradd -mG wheel $CREATEUSERNAME
-    echo -e "\n==========================================
-Insert the PASSWORD Of $CREATEUSERNAME
-=========================================="
-    passwd $CREATEUSERNAME
+    $CONFIRMATIONTRUE = true
+    while ["$CONFIRMATIONTRUE" = true]; do
+        printf "\033c"
+        echo -e "================================================================"
+        echo -e "Insert your USERNAME (yes your username, will be in wheel group)"
+        echo -e "================================================================"
+        read $CREATEUSERNAME
+
+        echo -e "==========="
+        echo -e "Are you sure? (y/n)"
+        echo -e "==========="
+        read $CONFIRMATION
+
+        if [ "$CONFIRMATION" = "y" || "Y" || "yes" || "YES" ]; then
+            $CONFIRMATIONTRUE = false
+
+            useradd -mG wheel $CREATEUSERNAME
+        fi
+
+    done
+
+    #Create a password for your user
+    $CONFIRMATIONTRUE = true
+    while ["$CONFIRMATIONTRUE" = true]; do
+        printf "\033c"
+        echo -e "\n===================================="
+        echo -e "Insert the PASSWORD Of $CREATEUSERNAME"
+        echo -e "======================================"
+
+        echo -e "==========="
+        echo -e "Are you sure? (y/n)"
+        echo -e "==========="
+        read 
+
+        if [ "$CONFIRMATION" = "y" || "Y" || "yes" || "YES" ]; then
+            $CONFIRMATIONTRUE = false
+
+            passwd $CREATEUSERNAME
+        fi
+
+    done
 
     #Verifying if is EFI or not to install GRUB
     echo -e "Verifing if is EFI or not..."
