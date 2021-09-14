@@ -5,16 +5,17 @@ echo -e "This is a personal script, use it by your own risk"
 echo -e "Write: I agree"
 echo -e "To continue"
 
-READ $AGREEING
+read $AGREEING
 
-if ["$AGREEING" === "I agree" || "i agree" || "I AGREE"]; then
+if ["$AGREEING" === "I agree"]
+then
 
     #Use timedatectl to ensure the system clock is accurate:
     timedatectl set-ntp true
 
     #Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
     echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
-    pacstrap /mnt base linux linux-firmware vim nano
+    pacstrap /mnt base linux linux-firmwaqre vim nano
 
     #Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
     genfstab -U /mnt >>/mnt/etc/fstab
