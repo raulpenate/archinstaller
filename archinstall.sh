@@ -31,9 +31,15 @@ pacstrap /mnt base linux linux-firmware vim
 # Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
 genfstab -U /mnt >> /mnt/etc/fstab
 
-# Changing to chroot
-arch-chroot /mnt
+# Sed, cutting this script
+sed '1,/^#chrootpart$/d' /root/arch-installer/archinstall.sh > /mnt/archinstallpart2.sh
+chmod +x /mnt/archinstallpart2.sh
 
+# Changing to chroot
+arch-chroot /mnt ./archinstall.sh
+exit
+
+#chrootpart
 # Use timedatectl(1) to ensure the system clock is accurate:
 echo -e "Using timedatectl to ensure the system clock is accurate"
 timedatectl set-ntp true
@@ -106,7 +112,7 @@ pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh \
     networkmanager network-manager-applet wireless_tools wpa_supplicant \
     tilix google-chrome firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
     xorg i3-gaps dmenu nitrogen curl man-db \
-    picom nitrogen feh pcmanfm ranger rofi zsh\
+    picom nitrogen feh pcmanfm ranger rofi zsh most \
     zathura zathura-pdf-mupdf ffmpeg imagemagick  \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl  \
     arandr thunar htop bashtop
@@ -179,11 +185,6 @@ do
     
 done
 
-#```````````````----------------------------------------------------------------------```````````````
-#```````````````------------------------------ PART 3 --------------------------------```````````````
-#```````````````------------------------- Installing GRUB ----------------------------``````````````` 
-#```````````````----------------------------------------------------------------------```````````````
-
 # Verifying if is EFI or not to install GRUB
 echo -e "Verifing if is EFI or not..."
 if [ -d /sys/firmware/efi ]; then
@@ -200,3 +201,8 @@ if [ -z $(grep -i "GRUB\_DISABLE\_OS\_PROBER=FALSE" /etc/default/grub) ]; then
 fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
+
+#```````````````----------------------------------------------------------------------```````````````
+#```````````````------------------------------ PART 3 --------------------------------```````````````
+#```````````````----------------------------- DOTFILES -------------------------------``````````````` 
+#```````````````----------------------------------------------------------------------```````````````
