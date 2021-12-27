@@ -36,7 +36,7 @@ sed '1,/^#chrootpart$/d' /root/arch-installer/archinstall.sh > /mnt/archinstallp
 chmod +x /mnt/archinstallpart2.sh
 
 # Changing to chroot
-arch-chroot /mnt ./archinstall.sh
+arch-chroot /mnt ./archinstallpart2.sh
 exit
 
 #chrootpart
