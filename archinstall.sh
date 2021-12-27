@@ -66,14 +66,14 @@ echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 #```````````````----------------------------------------------------------------------```````````````
 
 # If u insert ur user ends
-CONFIRMATION=true
-while [ "$CONFIRMATION" = true ]
+CONFIRMATION=y
+while [ "$CONFIRMATION" = "y" ]
 do
     HOSTNAME=""
     printf "\033c"
     echo -e "----------------------------------------------------------"
     echo -e "Insert your HOSTNAME (or how you wanna name your computer) :"
-    read -p "-->  " HOSTNAME
+    read -p "New hostname: " HOSTNAME
     
     read -p "Are you sure? (y/n) : " CONFIRMATION  
     
@@ -113,8 +113,7 @@ pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh \
     systemctl enable NetworkManager
 
 # Create your root password
-CONFIRMATION=true
-while [ "$CONFIRMATION" = true ]
+while [ "$CONFIRMATION" = "y" ]
 do
     echo -e "-------------------------------------------------"
     echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
@@ -129,7 +128,7 @@ do
 done
 
 # Create your user
-while [ "$CONFIRMATION" = true ]
+while [ "$CONFIRMATION" = "y" ]
 do
     echo -e "---------------------------------------------------------------"
     echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
@@ -145,7 +144,7 @@ do
     
 done
 # Create a password for your user
-while [ "$CONFIRMATION" = true ]
+while [ "$CONFIRMATION" = "y" ]
 do
     echo -e "--------------------------------------"
     echo -e "Insert the PASSWORD Of $CREATEDUSERNAME"
@@ -161,6 +160,7 @@ do
 done
 
 # Verifying if is EFI or not to install GRUB
+echo -e "--------------------------------------"
 echo -e "Verifing if is EFI or not..."
 if [ -d /sys/firmware/efi ]; then
     echo -e "Installing GRUB in UEFI\n"
