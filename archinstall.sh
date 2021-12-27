@@ -31,7 +31,7 @@ pacstrap /mnt base linux linux-firmware vim
 # Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
 genfstab -U /mnt >> /mnt/etc/fstab
 
-# Sed, cutting this script
+# With sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode
 sed '1,/^#chrootpart$/d' /root/arch-installer/archinstall.sh > /mnt/archinstallpart2.sh
 chmod +x /mnt/archinstallpart2.sh
 
@@ -40,7 +40,7 @@ arch-chroot /mnt ./archinstallpart2.sh
 exit
 
 #chrootpart
-# Use timedatectl(1) to ensure the system clock is accurate:
+# Use timedatectl to ensure the system clock is accurate:
 echo -e "Using timedatectl to ensure the system clock is accurate"
 timedatectl set-ntp true
 echo -e "\nUsing timectl status"
@@ -57,7 +57,6 @@ locale-gen
 # Create the locale.conf file, and set the LANG variable accordingly:
 echo -e "-------------------------------------------------------"
 echo -e "Creating the locale file, and setting the LANG variable"
-echo -e "-------------------------------------------------------"
 echo -e "in this case LANG=en_US.UTF-8"
 echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
@@ -67,40 +66,34 @@ echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 #```````````````----------------------------------------------------------------------```````````````
 
 # If u insert ur user ends
-CONFIRMATIONTRUE=true
-while [ "$CONFIRMATIONTRUE" = true ]
+CONFIRMATION=true
+while [ "$CONFIRMATION" = true ]
 do
     HOSTNAME=""
     printf "\033c"
     echo -e "----------------------------------------------------------"
-    echo -e "Insert your HOSTNAME (or how you wanna name your computer)"
-    echo -e "----------------------------------------------------------"
-    read HOSTNAME
+    echo -e "Insert your HOSTNAME (or how you wanna name your computer) :"
+    read -p "-->  " HOSTNAME
     
-    echo -e "-------------------"
-    echo -e "Are you sure? (y/n)"
-    echo -e "-------------------"
-    read CONFIRMATION
+    read -p "Are you sure? (y/n) : " CONFIRMATION  
     
     if [ "$CONFIRMATION" = "y" ]; then
-        CONFIRMATIONTRUE=false
         # Create the hostname file:
-        echo -e $HOSTNAME >> /etc/hostname
+        echo -e $HOSTNAME > /etc/hostname
         break
     fi
     
 done
 
-# Add matching entries to hosts(5):
+# Add matching entries to hosts:
 echo -e "\n--------------------------------"
 echo -e "Adding matching entries to hosts"
-echo -e "--------------------------------"
-echo -e "127.0.0.1	localhost" >> /etc/hosts
+echo -e "127.0.0.1	localhost" > /etc/hosts
 echo -e "::1		localhost" >> /etc/hosts
 echo -e "127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME" >> /etc/hosts
 
 # Creating a new initramfs is usually not required, because mkinitcpio was run on installation of the kernel package with pacstrap.
-# For LVM, system encryption or RAID, modify mkinitcpio.conf(5) and recreate the initramfs image:
+# For LVM, system encryption or RAID, modify mkinitcpio.conf and recreate the initramfs image:
 mkinitcpio -P
 # Updating repositories
 pacman -Syy
@@ -120,66 +113,48 @@ pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh \
     systemctl enable NetworkManager
 
 # Create your root password
-CONFIRMATIONTRUE=true
-while [ "$CONFIRMATIONTRUE" = true ]
+CONFIRMATION=true
+while [ "$CONFIRMATION" = true ]
 do
     echo -e "-------------------------------------------------"
     echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
-    echo -e "-------------------------------------------------"
     passwd
     
-    echo -e "--------------------"
-    echo -e "Are you sure? (y/n)"
-    echo -e "--------------------"
-    read $CONFIRMATION
+    read -p "Are you sure? (y/n) : " CONFIRMATION  
     
     if [ "$CONFIRMATION" = "y" ]; then
-        CONFIRMATIONTRUE=false
         break
     fi
 
 done
 
 # Create your user
-CONFIRMATIONTRUE=true
-while [ "$CONFIRMATIONTRUE" = true ]
+while [ "$CONFIRMATION" = true ]
 do
     echo -e "---------------------------------------------------------------"
-    echo -e "Insert your USERNAME (yes your username, will be in wheel group)"
-    echo -e "----------------------------------------------------------------"
-    read $CREATEUSERNAME
+    echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
+    read -p "--> " $CREATEDUSERNAME
     
-    echo -e "-------------------"
-    echo -e "Are you sure? (y/n)"
-    echo -e "-------------------"
-    read $CONFIRMATION
+    read -p "Are you sure? (y/n) : " CONFIRMATION  
 
     if [ "$CONFIRMATION" = "y" ]; then
-        CONFIRMATIONTRUE=false
-        
-        useradd -mG wheel $CREATEUSERNAME
+        useradd -mG wheel $CREATEDUSERNAME
         echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
-
         break
     fi
     
 done
 # Create a password for your user
-CONFIRMATIONTRUE=true
-while [ "$CONFIRMATIONTRUE" = true ]
+while [ "$CONFIRMATION" = true ]
 do
     echo -e "--------------------------------------"
-    echo -e "Insert the PASSWORD Of $CREATEUSERNAME"
-    echo -e "--------------------------------------"
+    echo -e "Insert the PASSWORD Of $CREATEDUSERNAME"
+
+    passwd $CREATEDUSERNAME
     
-    echo -e "-------------------"
-    echo -e "Are you sure? (y/n)"
-    echo -e "-------------------"
-    read
-    
+    read -p "Are you sure? (y/n) : " CONFIRMATION  
+
     if [ "$CONFIRMATION" = "y" ]; then
-        CONFIRMATIONTRUE=false
-        passwd $CREATEUSERNAME
         break 
     fi
     
