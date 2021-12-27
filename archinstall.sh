@@ -115,7 +115,7 @@ pacman -Sy --noconfirm mtools dosfstools base-devel linux-headers openssh
 # Create your root password
 while [ "$CONFIRMATION" = "y" ]
 do
-    echo -e "-------------------------------------------------"
+    echo -e "\n-------------------------------------------------"
     echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
     passwd
     
@@ -130,7 +130,7 @@ done
 # Create your user
 while [ "$CONFIRMATION" = "y" ]
 do
-    echo -e "---------------------------------------------------------------"
+    echo -e "\n---------------------------------------------------------------"
     echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
     read -p "--> " CREATEDUSERNAME
     
@@ -146,7 +146,7 @@ done
 # Create a password for your user
 while [ "$CONFIRMATION" = "y" ]
 do
-    echo -e "--------------------------------------"
+    echo -e "\n--------------------------------------"
     echo -e "Insert the PASSWORD Of $CREATEDUSERNAME"
 
     passwd $CREATEDUSERNAME
@@ -160,7 +160,7 @@ do
 done
 
 # Verifying if is EFI or not to install GRUB
-echo -e "--------------------------------------"
+echo -e "\n--------------------------------------"
 echo -e "Verifing if is EFI or not..."
 if [ -d /sys/firmware/efi ]; then
     echo -e "Installing GRUB in UEFI\n"
