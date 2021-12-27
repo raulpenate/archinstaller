@@ -80,7 +80,7 @@ do
         $CONFIRMATIONTRUE = false
         # Create the hostname file:
         printf "\033c"
-        echo -e $HOSTNAME >>/etc/hostname
+        echo -e $HOSTNAME >> /etc/hostname
     fi
     
 done
@@ -113,7 +113,7 @@ pacman -S --noconfirm mtools dosftools base-devel linux-headers openssh \
 
     systemctl enable NetworkManager
 # Create your root password
-$CONFIRMATIONTRUE = true
+CONFIRMATIONTRUE=true
 while [ "$CONFIRMATIONTRUE" = true ]
 do
     printf "\033c"
@@ -128,13 +128,13 @@ do
     read $CONFIRMATION
     
     if [ "$CONFIRMATION" = "y" ]; then
-        $CONFIRMATIONTRUE = false
+        CONFIRMATIONTRUE=false
     fi
 
 done
 
 # Create your user
-$CONFIRMATIONTRUE = true
+CONFIRMATIONTRUE=true
 while [ "$CONFIRMATIONTRUE" = true ]
 do
     printf "\033c"
@@ -149,7 +149,7 @@ do
     read $CONFIRMATION
 
     if [ "$CONFIRMATION" = "y" ]; then
-        $CONFIRMATIONTRUE = false
+        CONFIRMATIONTRUE=false
         
         useradd -mG wheel $CREATEUSERNAME
         echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
@@ -157,7 +157,7 @@ do
     
 done
 # Create a password for your user
-$CONFIRMATIONTRUE = true
+CONFIRMATIONTRUE=true
 while [ "$CONFIRMATIONTRUE" = true ]
 do
     printf "\033c"
@@ -171,7 +171,7 @@ do
     read
     
     if [ "$CONFIRMATION" = "y" ]; then
-        $CONFIRMATIONTRUE = false
+        CONFIRMATIONTRUE=false
         passwd $CREATEUSERNAME
     fi
     
