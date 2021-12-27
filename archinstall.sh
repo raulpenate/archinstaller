@@ -62,7 +62,8 @@ echo -e "LANG=en_US.UTF-8" >>/etc/locale.conf
 
 # If u insert ur user ends
 $CONFIRMATIONTRUE = true
-while ["$CONFIRMATIONTRUE" = true]; do
+while [ "$CONFIRMATIONTRUE" = true ]
+do
     $HOSTNAME = ""
     printf "\033c"
     echo -e "----------------------------------------------------------"
@@ -113,7 +114,8 @@ pacman -S --noconfirm mtools dosftools base-devel linux-headers openssh \
     systemctl enable NetworkManager
 # Create your root password
 $CONFIRMATIONTRUE = true
-while ["$CONFIRMATIONTRUE" = true]; do
+while [ "$CONFIRMATIONTRUE" = true ]
+do
     printf "\033c"
     echo -e "-------------------------------------------------"
     echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
@@ -128,11 +130,13 @@ while ["$CONFIRMATIONTRUE" = true]; do
     if [ "$CONFIRMATION" = "y" ]; then
         $CONFIRMATIONTRUE = false
     fi
-    
+
 done
+
 # Create your user
 $CONFIRMATIONTRUE = true
-while ["$CONFIRMATIONTRUE" = true]; do
+while [ "$CONFIRMATIONTRUE" = true ]
+do
     printf "\033c"
     echo -e "---------------------------------------------------------------"
     echo -e "Insert your USERNAME (yes your username, will be in wheel group)"
@@ -143,7 +147,7 @@ while ["$CONFIRMATIONTRUE" = true]; do
     echo -e "Are you sure? (y/n)"
     echo -e "-------------------"
     read $CONFIRMATION
-    
+
     if [ "$CONFIRMATION" = "y" ]; then
         $CONFIRMATIONTRUE = false
         
@@ -154,7 +158,8 @@ while ["$CONFIRMATIONTRUE" = true]; do
 done
 # Create a password for your user
 $CONFIRMATIONTRUE = true
-while ["$CONFIRMATIONTRUE" = true]; do
+while [ "$CONFIRMATIONTRUE" = true ]
+do
     printf "\033c"
     echo -e "--------------------------------------"
     echo -e "Insert the PASSWORD Of $CREATEUSERNAME"
@@ -179,7 +184,7 @@ done
 
 # Verifying if is EFI or not to install GRUB
 echo -e "Verifing if is EFI or not..."
-if [-d /sys/firmware/efi]; then
+if [ -d /sys/firmware/efi ]; then
     echo -e "Installing GRUB in UEFI\n"
     grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 else
