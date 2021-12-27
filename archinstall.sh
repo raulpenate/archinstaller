@@ -69,12 +69,12 @@ do
     echo -e "----------------------------------------------------------"
     echo -e "Insert your HOSTNAME (or how you wanna name your computer)"
     echo -e "----------------------------------------------------------"
-    read $HOSTNAME
+    read HOSTNAME
     
     echo -e "-------------------"
     echo -e "Are you sure? (y/n)"
     echo -e "-------------------"
-    read $CONFIRMATION
+    read CONFIRMATION
     
     if [ "$CONFIRMATION" = "y" ]; then
         CONFIRMATIONTRUE=false
