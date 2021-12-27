@@ -1,6 +1,20 @@
 #!/bin/bash
 # SCRIPT MADE BY raulpenate
-echo -e "This is a personal script, use it by your own risk"
+printf "\033c"
+echo "
+SCRIPT MADE BY:
+
+ ██▀███   ▄▄▄       █    ██  ██▓     ██▓███  ▓█████  ███▄    █  ▄▄▄      ▄▄▄█████▓▓█████ 
+▓██ ▒ ██▒▒████▄     ██  ▓██▒▓██▒    ▓██░  ██▒▓█   ▀  ██ ▀█   █ ▒████▄    ▓  ██▒ ▓▒▓█   ▀ 
+▓██ ░▄█ ▒▒██  ▀█▄  ▓██  ▒██░▒██░    ▓██░ ██▓▒▒███   ▓██  ▀█ ██▒▒██  ▀█▄  ▒ ▓██░ ▒░▒███   
+▒██▀▀█▄  ░██▄▄▄▄██ ▓▓█  ░██░▒██░    ▒██▄█▓▒ ▒▒▓█  ▄ ▓██▒  ▐▌██▒░██▄▄▄▄██ ░ ▓██▓ ░ ▒▓█  ▄ 
+░██▓ ▒██▒ ▓█   ▓██▒▒▒█████▓ ░██████▒▒██▒ ░  ░░▒████▒▒██░   ▓██░ ▓█   ▓██▒  ▒██▒ ░ ░▒████▒
+░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░▒▓▒ ▒ ▒ ░ ▒░▓  ░▒▓▒░ ░  ░░░ ▒░ ░░ ▒░   ▒ ▒  ▒▒   ▓▒█░  ▒ ░░   ░░ ▒░ ░
+  ░▒ ░ ▒░  ▒   ▒▒ ░░░▒░ ░ ░ ░ ░ ▒  ░░▒ ░      ░ ░  ░░ ░░   ░ ▒░  ▒   ▒▒ ░    ░     ░ ░  ░
+  ░░   ░   ░   ▒    ░░░ ░ ░   ░ ░   ░░          ░      ░   ░ ░   ░   ▒     ░         ░   
+   ░           ░  ░   ░         ░  ░            ░  ░         ░       ░  ░            ░  ░                                                                            
+"
+read -p "\n --> This is a personal script, use it by your own risk, press ENTER to continue... <--"
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 1 --------------------------------```````````````
@@ -15,7 +29,7 @@ echo -e "\nUsing the pacstrap script to install the base package, Linux kernel a
 pacstrap /mnt base linux linux-firmwaqre vim nano
 
 # Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
-genfstab -U /mnt >>/mnt/etc/fstab
+genfstab -U /mnt >> /mnt/etc/fstab
 
 # Changing to chroot
 arch-chroot /mnt
@@ -43,7 +57,7 @@ echo -e "LANG=en_US.UTF-8" >>/etc/locale.conf
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 2 --------------------------------```````````````
-#```````````````--------------------- Adding HOST and software -----------------------```````````````
+#```````````````------------------- Adding HOST, USERS and software ------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
 
 # If u insert ur user ends
@@ -61,7 +75,7 @@ while ["$CONFIRMATIONTRUE" = true]; do
     echo -e "-------------------"
     read $CONFIRMATION
     
-    if [ "$CONFIRMATION" = "y" || "Y" || "yes" || "YES" ]; then
+    if [ "$CONFIRMATION" = "y" ]; then
         $CONFIRMATIONTRUE = false
         # Create the hostname file:
         printf "\033c"
@@ -74,9 +88,9 @@ done
 echo -e "\n--------------------------------"
 echo -e "Adding matching entries to hosts"
 echo -e "--------------------------------"
-echo -e "127.0.0.1	localhost" >>/etc/hosts
-echo -e "::1		localhost" >>/etc/hosts
-echo -e "127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME" >>/etc/hosts
+echo -e "127.0.0.1	localhost" >> /etc/hosts
+echo -e "::1		localhost" >> /etc/hosts
+echo -e "127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME" >> /etc/hosts
 
 # Creating a new initramfs is usually not required, because mkinitcpio was run on installation of the kernel package with pacstrap.
 # For LVM, system encryption or RAID, modify mkinitcpio.conf(5) and recreate the initramfs image:
@@ -84,13 +98,18 @@ mkinitcpio -P
 # Updating repositories
 pacman -Syy
 ## Basic things for arch
-pacman -S --noconfirm mtools dosftools base-devel linux-headers openssh
+pacman -S --noconfirm mtools dosftools base-devel linux-headers openssh \
+    noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome \
     grub efibootmgr os-prober \
     bluez bluez-utils blueman pulseaudio-bluetooth \
     NetworkManager network-manager-applet wireless-tools wpa_supplicant \
     tilix google-chrome firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
     xorg i3-gaps dmenu nitrogen termite curl man-db \
-    picom nitrogen feh pcmanfm ranger polybar rofi \
+    picom nitrogen feh pcmanfm ranger polybar rofi zsh\
+    athura zathura-pdf-mupdf ffmpeg imagemagick  \
+    zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl  \
+    arandr thunar htop bashtop
+
     systemctl enable NetworkManager
 # Create your root password
 $CONFIRMATIONTRUE = true
@@ -106,7 +125,7 @@ while ["$CONFIRMATIONTRUE" = true]; do
     echo -e "--------------------"
     read $CONFIRMATION
     
-    if [ "$CONFIRMATION" = "y" || "Y" || "yes" || "YES" ]; then
+    if [ "$CONFIRMATION" = "y" ]; then
         $CONFIRMATIONTRUE = false
     fi
     
@@ -125,10 +144,11 @@ while ["$CONFIRMATIONTRUE" = true]; do
     echo -e "-------------------"
     read $CONFIRMATION
     
-    if [ "$CONFIRMATION" = "y" || "Y" || "yes" || "YES" ]; then
+    if [ "$CONFIRMATION" = "y" ]; then
         $CONFIRMATIONTRUE = false
         
         useradd -mG wheel $CREATEUSERNAME
+        echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
     fi
     
 done
@@ -145,7 +165,7 @@ while ["$CONFIRMATIONTRUE" = true]; do
     echo -e "-------------------"
     read
     
-    if [ "$CONFIRMATION" = "y" || "Y" || "yes" || "YES" ]; then
+    if [ "$CONFIRMATION" = "y" ]; then
         $CONFIRMATIONTRUE = false
         passwd $CREATEUSERNAME
     fi
@@ -168,7 +188,7 @@ else
 fi
 # Verifying if OSPROBER is allowed
 if [ -z $(grep -i "GRUB\_DISABLE\_OS\_PROBER=FALSE" /etc/default/grub)]; then
-    echo -e "GRUB_DISABLE_OS_PROBER=FALSE" >>/etc/default/grub
+    echo -e "GRUB_DISABLE_OS_PROBER=FALSE" >> /etc/default/grub
 fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
