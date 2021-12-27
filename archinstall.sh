@@ -98,16 +98,16 @@ mkinitcpio -P
 # Updating repositories
 pacman -Syy
 ## Basic things for arch
-pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh \
-    noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome \
-    grub efibootmgr os-prober \
-    bluez bluez-utils blueman pulseaudio-bluetooth \
-    networkmanager network-manager-applet wireless_tools wpa_supplicant \
-    tilix google-chrome firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
-    xorg i3-gaps dmenu nitrogen curl man-db \
-    picom nitrogen feh pcmanfm ranger rofi zsh most \
-    zathura zathura-pdf-mupdf ffmpeg imagemagick  \
-    zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl  \
+pacman -Sy --noconfirm mtools dosfstools base-devel linux-headers openssh
+    noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
+    grub efibootmgr os-prober
+    bluez bluez-utils blueman pulseaudio-bluetooth
+    networkmanager network-manager-applet wireless_tools wpa_supplicant
+    tilix google-chrome firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git
+    xorg i3-gaps dmenu nitrogen curl man-db
+    picom nitrogen feh pcmanfm ranger rofi zsh most
+    zathura zathura-pdf-mupdf ffmpeg imagemagick
+    zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl
     arandr thunar htop bashtop
 
     systemctl enable NetworkManager
@@ -132,13 +132,13 @@ while [ "$CONFIRMATION" = "y" ]
 do
     echo -e "---------------------------------------------------------------"
     echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
-    read -p "--> " $CREATEDUSERNAME
+    read -p "--> " CREATEDUSERNAME
     
     read -p "Are you sure? (y/n) : " CONFIRMATION  
 
     if [ "$CONFIRMATION" = "y" ]; then
-        useradd -mG wheel $CREATEDUSERNAME
         echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
+        useradd -mG wheel $CREATEDUSERNAME
         break
     fi
     
