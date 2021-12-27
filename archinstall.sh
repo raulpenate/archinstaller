@@ -26,7 +26,7 @@ timedatectl set-ntp true
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
 echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
-pacstrap /mnt base linux linux-firmwaqre vim nano
+pacstrap /mnt base linux linux-firmware vim
 
 # Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -99,19 +99,20 @@ mkinitcpio -P
 # Updating repositories
 pacman -Syy
 ## Basic things for arch
-pacman -S --noconfirm mtools dosftools base-devel linux-headers openssh \
+pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh \
     noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome \
     grub efibootmgr os-prober \
     bluez bluez-utils blueman pulseaudio-bluetooth \
-    NetworkManager network-manager-applet wireless-tools wpa_supplicant \
+    networkmanager network-manager-applet wireless_tools wpa_supplicant \
     tilix google-chrome firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
-    xorg i3-gaps dmenu nitrogen termite curl man-db \
-    picom nitrogen feh pcmanfm ranger polybar rofi zsh\
-    athura zathura-pdf-mupdf ffmpeg imagemagick  \
+    xorg i3-gaps dmenu nitrogen curl man-db \
+    picom nitrogen feh pcmanfm ranger rofi zsh\
+    zathura zathura-pdf-mupdf ffmpeg imagemagick  \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl  \
     arandr thunar htop bashtop
 
     systemctl enable NetworkManager
+
 # Create your root password
 CONFIRMATIONTRUE=true
 while [ "$CONFIRMATIONTRUE" = true ]
