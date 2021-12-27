@@ -14,7 +14,7 @@ SCRIPT MADE BY:
   ░░   ░   ░   ▒    ░░░ ░ ░   ░ ░   ░░          ░      ░   ░ ░   ░   ▒     ░         ░   
    ░           ░  ░   ░         ░  ░            ░  ░         ░       ░  ░            ░  ░                                                                            
 "
-read -p "\n --> This is a personal script, use it by your own risk, press ENTER to continue... <--"
+read -p "   --> This is a personal script, use it by your own risk, press ENTER to continue... <--"
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 1 --------------------------------```````````````
