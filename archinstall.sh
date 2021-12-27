@@ -77,10 +77,10 @@ do
     read $CONFIRMATION
     
     if [ "$CONFIRMATION" = "y" ]; then
-        $CONFIRMATIONTRUE = false
+        CONFIRMATIONTRUE=false
         # Create the hostname file:
-        printf "\033c"
         echo -e $HOSTNAME >> /etc/hostname
+        break
     fi
     
 done
@@ -129,6 +129,7 @@ do
     
     if [ "$CONFIRMATION" = "y" ]; then
         CONFIRMATIONTRUE=false
+        break
     fi
 
 done
@@ -153,6 +154,8 @@ do
         
         useradd -mG wheel $CREATEUSERNAME
         echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
+
+        break
     fi
     
 done
@@ -173,6 +176,7 @@ do
     if [ "$CONFIRMATION" = "y" ]; then
         CONFIRMATIONTRUE=false
         passwd $CREATEUSERNAME
+        break 
     fi
     
 done
@@ -191,8 +195,9 @@ else
     echo -e "Installing GRUB in BIOS\n"
     grub-install --recheck /dev/sda
 fi
+
 # Verifying if OSPROBER is allowed
-if [ -z $(grep -i "GRUB\_DISABLE\_OS\_PROBER=FALSE" /etc/default/grub)]; then
+if [ -z $(grep -i "GRUB\_DISABLE\_OS\_PROBER=FALSE" /etc/default/grub) ]; then
     echo -e "GRUB_DISABLE_OS_PROBER=FALSE" >> /etc/default/grub
 fi
 # Installing grub
