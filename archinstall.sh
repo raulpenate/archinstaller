@@ -53,7 +53,7 @@ echo -e "-------------------------------------------------------"
 echo -e "Creating the locale file, and setting the LANG variable"
 echo -e "-------------------------------------------------------"
 echo -e "in this case LANG=en_US.UTF-8"
-echo -e "LANG=en_US.UTF-8" >>/etc/locale.conf
+echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 2 --------------------------------```````````````
@@ -61,10 +61,10 @@ echo -e "LANG=en_US.UTF-8" >>/etc/locale.conf
 #```````````````----------------------------------------------------------------------```````````````
 
 # If u insert ur user ends
-$CONFIRMATIONTRUE = true
+CONFIRMATIONTRUE=true
 while [ "$CONFIRMATIONTRUE" = true ]
 do
-    $HOSTNAME = ""
+    HOSTNAME=""
     printf "\033c"
     echo -e "----------------------------------------------------------"
     echo -e "Insert your HOSTNAME (or how you wanna name your computer)"
