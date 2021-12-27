@@ -116,7 +116,6 @@ pacman -S --noconfirm mtools dosftools base-devel linux-headers openssh \
 CONFIRMATIONTRUE=true
 while [ "$CONFIRMATIONTRUE" = true ]
 do
-    printf "\033c"
     echo -e "-------------------------------------------------"
     echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
     echo -e "-------------------------------------------------"
@@ -138,7 +137,6 @@ done
 CONFIRMATIONTRUE=true
 while [ "$CONFIRMATIONTRUE" = true ]
 do
-    printf "\033c"
     echo -e "---------------------------------------------------------------"
     echo -e "Insert your USERNAME (yes your username, will be in wheel group)"
     echo -e "----------------------------------------------------------------"
@@ -163,7 +161,6 @@ done
 CONFIRMATIONTRUE=true
 while [ "$CONFIRMATIONTRUE" = true ]
 do
-    printf "\033c"
     echo -e "--------------------------------------"
     echo -e "Insert the PASSWORD Of $CREATEUSERNAME"
     echo -e "--------------------------------------"
