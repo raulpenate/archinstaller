@@ -12,7 +12,10 @@ SCRIPT MADE BY:
 ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░▒▓▒ ▒ ▒ ░ ▒░▓  ░▒▓▒░ ░  ░░░ ▒░ ░░ ▒░   ▒ ▒  ▒▒   ▓▒█░  ▒ ░░   ░░ ▒░ ░
   ░▒ ░ ▒░  ▒   ▒▒ ░░░▒░ ░ ░ ░ ░ ▒  ░░▒ ░      ░ ░  ░░ ░░   ░ ▒░  ▒   ▒▒ ░    ░     ░ ░  ░
   ░░   ░   ░   ▒    ░░░ ░ ░   ░ ░   ░░          ░      ░   ░ ░   ░   ▒     ░         ░   
-   ░           ░  ░   ░         ░  ░            ░  ░         ░       ░  ░            ░  ░                                                                            
+   ░           ░  ░   ░         ░  ░            ░  ░         ░       ░  ░            ░  ░        
+
+Do me a favor and listen the wrecks and the regrettes.                                                                    
+
 "
 read -p "   --> This is a personal script, use it by your own risk, press ENTER to continue... <--"
 
@@ -21,8 +24,73 @@ read -p "   --> This is a personal script, use it by your own risk, press ENTER 
 #```````````````----------------------- Installing Arch and basics -------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
 
+
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
+
+# Partitioning the disks
+CONFIRMATION=y
+while [ "$CONFIRMATION" = "y" ]
+do
+    cfdisk 
+    lsblk
+    read -p "\nDo you want to continue? (y/n): " CONFIRMATION
+    if [ "$CONFIRMATION" = "y" ]; then
+        # Formating and mounting the partition
+        mkfs.btrfs $ospartition
+        mount $ospartition /mnt
+        break
+    fi
+    
+done
+# arch partition
+while [ "$CONFIRMATION" = "y" ]
+do
+    printf "\033c"
+    lsblk
+    read -p "\nEnter the /drive/partition where arch will be used (Ex: /sda/sda3): " ospartition
+    read -p "\nDo you want to continue? (y/n): " CONFIRMATION
+    if [ "$CONFIRMATION" = "y" ]; then
+        # Formating and mounting the partition
+        mkfs.ext4 $ospartition
+        mount $ospartition /mnt
+        break
+    fi
+    
+done
+# EFI or bios partition
+read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
+while [ "$CONFIRMATION" = "y" ]
+do
+    printf "\033c"
+    lsblk
+    read -p "\nEnter the /drive/partition where the BOOTLOADER will be used (Ex: /sda/sda1): " bootpartition
+    read -p "\nDo you want to continue? (y/n): " CONFIRMATION
+    if [ "$CONFIRMATION" = "y" ]; then
+        # Formating and mounting the partition
+        mkfs.fat -F32 $bootpartition
+        mkdir /mnt/boot
+        mount $bootpartition /mnt/boot
+        break
+    fi
+done
+# EFI or bios partition
+read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
+while [ "$CONFIRMATION" = "y" ]
+do
+    printf "\033c"
+    lsblk
+    read -p "\nEnter the /drive/partition where the SWAP will be used (Ex: /sda/sda2): " swappartition
+    read -p "\nDo you want to continue? (y/n): " CONFIRMATION
+    if [ "$CONFIRMATION" = "y" ]; then
+        # Formating and mounting the partition
+        mkswap $swappartition
+        swapon $swappartition
+        mount $bootpartition /mnt/boot
+        break
+    fi
+done
+
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
 echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
@@ -181,3 +249,6 @@ grub-mkconfig -o /boot/grub/grub.cfg
 #```````````````------------------------------ PART 3 --------------------------------```````````````
 #```````````````----------------------------- DOTFILES -------------------------------``````````````` 
 #```````````````----------------------------------------------------------------------```````````````
+
+# to automatically delete this file
+#rm 
