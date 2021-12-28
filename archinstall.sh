@@ -29,13 +29,13 @@ sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
 #Disk formating and mounting
-CONFIRMATION=y
-read -p "Do you want TO SKIPT disk formating? (y/n): " CONFIRMATION
-if [ "$CONFIRMATION" = "n" ]; then
+read -p "Do you want to format and partition your disk? (y/n): " CONFIRMATION
+if [ "$CONFIRMATION" = "y" ]; then
     #umounting if the script was runned already
     umount -R /mnt
     umount -R /mnt/boot
     rm -rf /mnt/boot
+    rm -rf /mnt/efi 
     # Partitioning the disks
     cfdisk 
     # arch partition
@@ -47,12 +47,14 @@ if [ "$CONFIRMATION" = "n" ]; then
     mkfs.ext4 /dev/$ospartition
     mount /dev/$ospartition /mnt
     # EFI or bios partition
+    echo -e "\n---------------------------------------------------------------------------------"
     read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
         lsblk
         echo -e "\n---------------------------------------------------------------------------------"
         read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
+        echo -e "\n---------------------------------------------------------------------------------"
         # Formating and mounting the partition
         mkfs.fat -F32 /dev/$bootpartition
         mkdir /mnt/boot
@@ -81,6 +83,9 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # With sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode
 sed '1,/^#chrootpart$/d' /root/arch-installer/archinstall.sh > /mnt/archinstallpart2.sh
 chmod +x /mnt/archinstallpart2.sh
+$bootpartition > /mnt/bootpartition.txt
+chmod +x /mnt/archinstallpart2.sh
+chmod +r /mnt/bootpartition.txt
 
 # Changing to chroot
 arch-chroot /mnt ./archinstallpart2.sh
@@ -106,8 +111,9 @@ hwclock --systohc
 echo -e "-------------------------------------------------------"
 echo -e "Creating the locale file, and setting the LANG variable"
 echo -e "in this case LANG=en_US.UTF-8"
-echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
+echo -e "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
+echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 2 --------------------------------```````````````
@@ -115,24 +121,12 @@ locale-gen
 #```````````````----------------------------------------------------------------------```````````````
 
 # If u insert ur user ends
-CONFIRMATION=y
-while [ "$CONFIRMATION" = "y" ]
-do
-    HOSTNAME=""
-    printf "\033c"
-    echo -e "----------------------------------------------------------"
-    echo -e "Insert your HOSTNAME (or how you wanna name your computer) :"
-    read -p "New hostname: " HOSTNAME
-    
-    read -p "Are you sure? (y/n) : " CONFIRMATION  
-    
-    if [ "$CONFIRMATION" = "y" ]; then
-        # Create the hostname file:
-        echo -e $HOSTNAME > /etc/hostname
-        break
-    fi
-    
-done
+printf "\033c"
+echo -e "----------------------------------------------------------"
+echo -e "Insert your HOSTNAME (or how you wanna name your computer) :"
+read -p "New hostname: " HOSTNAME
+# Create the hostname file:
+echo -e $HOSTNAME > /etc/hostname
 
 # Add matching entries to hosts:
 echo -e "\n--------------------------------"
@@ -170,7 +164,6 @@ systemctl enable NetworkManager
 echo -e "\n-------------------------------------------------"
 echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
 passwd
-read -p "Are you sure? (y/n) : " CONFIRMATION  
 # Create your user
 echo -e "\n---------------------------------------------------------------"
 echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
@@ -189,15 +182,16 @@ if [ -d /sys/firmware/efi ]; then
     grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 else
     echo -e "Installing GRUB in BIOS\n"
-    grub-install --recheck /dev/sda
+    bootloader=`cat bootloader.txt`
+    grub-install --recheck /dev/$bootloader
 fi
-
 # Verifying if OSPROBER is allowed
-if [ -z $(grep -i "GRUB\_DISABLE\_OS\_PROBER=FALSE" /etc/default/grub) ]; then
+if [ -z $(grep -i "\nGRUB\_DISABLE\_OS\_PROBER=false" /etc/default/grub) ]; then
     echo -e "GRUB_DISABLE_OS_PROBER=FALSE" >> /etc/default/grub
 fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
+unmount -R /mnt 
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 3 --------------------------------```````````````
