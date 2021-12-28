@@ -39,9 +39,9 @@ Do me a favor and listen the wrecks and the regrettes.
 "
 
 if [ -d /sys/firmware/efi ]; then
-    echo -e "\nYour device is$BIYellow BIOS$BIWhite, if you create a bootloader use $BIYellow\"BIOS boot\"\n $UYellow"
+    echo -e "\nYour device is$BIYellow EFI$BIWhite, if you create a bootloader use $BIYellow\"EFI System\"$BIWhite AND USE $BIYellow\"GPT\"$UYellow\n"
 else
-    echo -e "\nYour device is$BIYellow EFI$BIWhite, if you create a bootloader use $BIYellow\"EFI System\"\n $UYellow"
+    echo -e "\nYour device is$BIYellow BIOS$BIWhite, if you create a bootloader use $BIYellow\"BIOS boot\"$BIWhite AND USE $BIYellow\"MBR\"$UYellow\n"
 fi
 
 read -p "--> This is a personal script, use it by your own risk, press ENTER to continue... <--"
@@ -56,7 +56,7 @@ sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
 #Disk formating and mounting
-read -p "Do you want to format and partition your disk? (y/n): )" CONFIRMATION
+read -p "Do you want to format and partition your disk? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
     #umounting if the script was runned already
     umount -R /mnt
@@ -75,7 +75,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     mount /dev/$ospartition /mnt
     # EFI or bios partition
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "(Did you create an \"EPI or BIOS partition\"? (y/n): )" CONFIRMATION
+    read -p "Did you create an \"EPI or BIOS partition\"? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
         lsblk
