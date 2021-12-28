@@ -29,26 +29,22 @@ read -p "   --> This is a personal script, use it by your own risk, press ENTER 
 timedatectl set-ntp true
 
 # Partitioning the disks
-CONFIRMATION=y
-if [ "$CONFIRMATION" = "y" ]; then
-    cfdisk 
-    lsblk
-    # Formating and mounting the partition
-    mkfs.btrfs $ospartition
-    mount $ospartition /mnt
-fi
+cfdisk 
 # arch partition
-    printf "\033c"
-    lsblk
-    read -p "Enter the /drive/partition where arch will be used (Ex: /sda/sda3): " ospartition
-    # Formating and mounting the partition
-    mkfs.ext4 $ospartition
-    mount $ospartition /mnt
+printf "\033c"
+lsblk
+echo -e "\n---------------------------------------------------------------------------------"
+read -p "Enter the /drive/partition where arch will be used (Ex: /sda/sda3): " ospartition
+# Formating and mounting the partition
+mkfs.ext4 $ospartition
+mount $ospartition /mnt
 # EFI or bios partition
+printf "\033c"
+CONFIRMATION=y
 read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
-    printf "\033c"
     lsblk
+    echo -e "\n---------------------------------------------------------------------------------"
     read -p "Enter the /drive/partition where the BOOTLOADER will be used (Ex: /sda/sda1): " bootpartition
     # Formating and mounting the partition
     mkfs.fat -F32 $bootpartition
@@ -56,10 +52,11 @@ if [ "$CONFIRMATION" = "y" ]; then
     mount $bootpartition /mnt/boot
 fi
 # EFI or bios partition
+printf "\033c"
 read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
-    printf "\033c"
     lsblk
+    echo -e "\n---------------------------------------------------------------------------------"
     read -p "Enter the /drive/partition where the SWAP will be used (Ex: /sda/sda2): " swappartition
     # Formating and mounting the partition
     mkswap $swappartition
