@@ -34,10 +34,10 @@ cfdisk
 printf "\033c"
 lsblk
 echo -e "\n---------------------------------------------------------------------------------"
-read -p "Enter the /drive/partition where arch will be used (Ex: /sda/sda3): " ospartition
+read -p "Enter the /dev/drive where arch will be used (Ex: sda3): " ospartition
 # Formating and mounting the partition
-mkfs.ext4 $ospartition
-mount $ospartition /mnt
+mkfs.ext4 /dev/$ospartition
+mount /dev/$ospartition /mnt
 # EFI or bios partition
 printf "\033c"
 CONFIRMATION=y
@@ -45,11 +45,11 @@ read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
     lsblk
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Enter the /drive/partition where the BOOTLOADER will be used (Ex: /sda/sda1): " bootpartition
+    read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
     # Formating and mounting the partition
-    mkfs.fat -F32 $bootpartition
+    mkfs.fat -F32 /dev/$bootpartition
     mkdir /mnt/boot
-    mount $bootpartition /mnt/boot
+    mount /dev/$bootpartition /mnt/boot
 fi
 # EFI or bios partition
 printf "\033c"
@@ -57,11 +57,10 @@ read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
     lsblk
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Enter the /drive/partition where the SWAP will be used (Ex: /sda/sda2): " swappartition
+    read -p "Enter the /dev/drive where the SWAP will be used (Ex: sda2): " swappartition
     # Formating and mounting the partition
-    mkswap $swappartition
-    swapon $swappartition
-    mount $bootpartition /mnt/boot
+    mkswap /dev/$swappartition
+    swapon /dev/$swappartition
 fi
 
 
