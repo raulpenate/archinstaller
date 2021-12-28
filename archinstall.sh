@@ -24,7 +24,8 @@ read -p "   --> This is a personal script, use it by your own risk, press ENTER 
 #```````````````----------------------- Installing Arch and basics -------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
 
-
+#Adding more paralleldownloads
+sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
 #Disk formating and mounting
@@ -85,6 +86,8 @@ arch-chroot /mnt ./archinstallpart2.sh
 exit
 
 #chrootpart
+pacman -S --noconfirm sed
+sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 echo -e "Using timedatectl to ensure the system clock is accurate"
 timedatectl set-ntp true
@@ -160,55 +163,23 @@ pacman -Sy --noconfirm zathura zathura-pdf-mupdf ffmpeg imagemagick
 pacman -Sy --noconfirm zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl
 pacman -Sy --noconfirm arandr thunar htop bashtop
 
-    systemctl enable NetworkManager
+systemctl enable NetworkManager
 
 # Create your root password
-while [ "$CONFIRMATION" = "y" ]
-do
-    echo -e "\n-------------------------------------------------"
-    echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
-    passwd
-    
-    read -p "Are you sure? (y/n) : " CONFIRMATION  
-    
-    if [ "$CONFIRMATION" = "y" ]; then
-        break
-    fi
-
-done
-
+echo -e "\n-------------------------------------------------"
+echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
+passwd
+read -p "Are you sure? (y/n) : " CONFIRMATION  
 # Create your user
-while [ "$CONFIRMATION" = "y" ]
-do
-    echo -e "\n---------------------------------------------------------------"
-    echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
-    read -p "--> " CREATEDUSERNAME
-    
-    read -p "Are you sure? (y/n) : " CONFIRMATION  
-
-    if [ "$CONFIRMATION" = "y" ]; then
-        echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
-        useradd -mG wheel $CREATEDUSERNAME
-        break
-    fi
-    
-done
+echo -e "\n---------------------------------------------------------------"
+echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
+read -p "--> " CREATEDUSERNAME
+echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
+useradd -mG wheel $CREATEDUSERNAME
 # Create a password for your user
-while [ "$CONFIRMATION" = "y" ]
-do
-    echo -e "\n--------------------------------------"
-    echo -e "Insert the PASSWORD Of $CREATEDUSERNAME"
-
-    passwd $CREATEDUSERNAME
-    
-    read -p "Are you sure? (y/n) : " CONFIRMATION  
-
-    if [ "$CONFIRMATION" = "y" ]; then
-        break 
-    fi
-    
-done
-
+echo -e "\n--------------------------------------"
+echo -e "Insert the PASSWORD Of $CREATEDUSERNAME"
+passwd $CREATEDUSERNAME
 # Verifying if is EFI or not to install GRUB
 echo -e "\n--------------------------------------"
 echo -e "Verifing if is EFI or not..."
