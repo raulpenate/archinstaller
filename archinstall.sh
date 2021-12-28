@@ -1,23 +1,50 @@
 #!/bin/bash
 # SCRIPT MADE BY raulpenate
 printf "\033c"
-echo "
-SCRIPT MADE BY:
+# colors
+NC='\033[0m' # No Color
+# Bold High Intensity
+BIYellow='\033[1;93m'     # Yellow
+BICyan='\033[1;96m'       # Cyan
+BIWhite='\033[1;97m'      # White
+# Underline
+UYellow='\033[4;33m'      # Yellow
 
- ██▀███   ▄▄▄       █    ██  ██▓     ██▓███  ▓█████  ███▄    █  ▄▄▄      ▄▄▄█████▓▓█████ 
-▓██ ▒ ██▒▒████▄     ██  ▓██▒▓██▒    ▓██░  ██▒▓█   ▀  ██ ▀█   █ ▒████▄    ▓  ██▒ ▓▒▓█   ▀ 
-▓██ ░▄█ ▒▒██  ▀█▄  ▓██  ▒██░▒██░    ▓██░ ██▓▒▒███   ▓██  ▀█ ██▒▒██  ▀█▄  ▒ ▓██░ ▒░▒███   
-▒██▀▀█▄  ░██▄▄▄▄██ ▓▓█  ░██░▒██░    ▒██▄█▓▒ ▒▒▓█  ▄ ▓██▒  ▐▌██▒░██▄▄▄▄██ ░ ▓██▓ ░ ▒▓█  ▄ 
-░██▓ ▒██▒ ▓█   ▓██▒▒▒█████▓ ░██████▒▒██▒ ░  ░░▒████▒▒██░   ▓██░ ▓█   ▓██▒  ▒██▒ ░ ░▒████▒
-░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░▒▓▒ ▒ ▒ ░ ▒░▓  ░▒▓▒░ ░  ░░░ ▒░ ░░ ▒░   ▒ ▒  ▒▒   ▓▒█░  ▒ ░░   ░░ ▒░ ░
-  ░▒ ░ ▒░  ▒   ▒▒ ░░░▒░ ░ ░ ░ ░ ▒  ░░▒ ░      ░ ░  ░░ ░░   ░ ▒░  ▒   ▒▒ ░    ░     ░ ░  ░
-  ░░   ░   ░   ▒    ░░░ ░ ░   ░ ░   ░░          ░      ░   ░ ░   ░   ▒     ░         ░   
-   ░           ░  ░   ░         ░  ░            ░  ░         ░       ░  ░            ░  ░        
-
+# prentation and warning message
+echo -e "
+$BIWhite SCRIPT MADE BY$BIYellow RAULPENATE$BIWhite:
+$BICyan
+ ▄▄▄       ██▀███   ▄████▄   ██░ ██                                        
+▒████▄    ▓██ ▒ ██▒▒██▀ ▀█  ▓██░ ██▒                                       
+▒██  ▀█▄  ▓██ ░▄█ ▒▒▓█    ▄ ▒██▀▀██░                                       
+░██▄▄▄▄██ ▒██▀▀█▄  ▒▓▓▄ ▄██▒░▓█ ░██                                        
+ ▓█   ▓██▒░██▓ ▒██▒▒ ▓███▀ ░░▓█▒░██▓                                       
+ ▒▒   ▓▒█░░ ▒▓ ░▒▓░░ ░▒ ▒  ░ ▒ ░░▒░▒                                       
+  ▒   ▒▒ ░  ░▒ ░ ▒░  ░  ▒    ▒ ░▒░ ░                                       
+  ░   ▒     ░░   ░ ░         ░  ░░ ░                                       
+      ░  ░   ░     ░ ░       ░  ░  ░                                       
+                   ░                                                       
+ ██▓ ███▄    █   ██████ ▄▄▄█████▓ ▄▄▄       ██▓     ██▓    ▓█████  ██▀███  
+▓██▒ ██ ▀█   █ ▒██    ▒ ▓  ██▒ ▓▒▒████▄    ▓██▒    ▓██▒    ▓█   ▀ ▓██ ▒ ██▒
+▒██▒▓██  ▀█ ██▒░ ▓██▄   ▒ ▓██░ ▒░▒██  ▀█▄  ▒██░    ▒██░    ▒███   ▓██ ░▄█ ▒
+░██░▓██▒  ▐▌██▒  ▒   ██▒░ ▓██▓ ░ ░██▄▄▄▄██ ▒██░    ▒██░    ▒▓█  ▄ ▒██▀▀█▄  
+░██░▒██░   ▓██░▒██████▒▒  ▒██▒ ░  ▓█   ▓██▒░██████▒░██████▒░▒████▒░██▓ ▒██▒
+░▓  ░ ▒░   ▒ ▒ ▒ ▒▓▒ ▒ ░  ▒ ░░    ▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▓  ░░░ ▒░ ░░ ▒▓ ░▒▓░
+ ▒ ░░ ░░   ░ ▒░░ ░▒  ░ ░    ░      ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░ ░ ░  ░  ░▒ ░ ▒░
+ ▒ ░   ░   ░ ░ ░  ░  ░    ░        ░   ▒     ░ ░     ░ ░      ░     ░░   ░ 
+ ░           ░       ░                 ░  ░    ░  ░    ░  ░   ░  ░   ░     
+                                                                                
+$BIWhite
 Do me a favor and listen the wrecks and the regrettes.                                                                    
-
 "
-read -p "   --> This is a personal script, use it by your own risk, press ENTER to continue... <--"
+
+if [ -d /sys/firmware/efi ]; then
+    echo -e "\nYour device is$BIYellow BIOS$BIWhite, if you create a bootloader use $BIYellow\"BIOS boot\"\n $UYellow"
+else
+    echo -e "\nYour device is$BIYellow EFI$BIWhite, if you create a bootloader use $BIYellow\"EFI System\"\n $UYellow"
+fi
+
+read -p "--> This is a personal script, use it by your own risk, press ENTER to continue... <--"
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 1 --------------------------------```````````````
@@ -29,7 +56,7 @@ sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
 #Disk formating and mounting
-read -p "Do you want to format and partition your disk? (y/n): " CONFIRMATION
+read -p "Do you want to format and partition your disk? (y/n): )" CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
     #umounting if the script was runned already
     umount -R /mnt
@@ -41,14 +68,14 @@ if [ "$CONFIRMATION" = "y" ]; then
     # arch partition
     printf "\033c"
     lsblk
-    echo -e "\n---------------------------------------------------------------------------------"
+    echo -e "$NC\n---------------------------------------------------------------------------------"
     read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
     # Formating and mounting the partition
     mkfs.ext4 /dev/$ospartition
     mount /dev/$ospartition /mnt
     # EFI or bios partition
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
+    read -p "(Did you create an \"EPI or BIOS partition\"? (y/n): )" CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
         lsblk
@@ -83,15 +110,21 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # With sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode
 sed '1,/^#chrootpart$/d' /root/arch-installer/archinstall.sh > /mnt/archinstallpart2.sh
 chmod +x /mnt/archinstallpart2.sh
-$bootpartition > /mnt/bootpartition.txt
-chmod +x /mnt/archinstallpart2.sh
-chmod +r /mnt/bootpartition.txt
 
 # Changing to chroot
 arch-chroot /mnt ./archinstallpart2.sh
 exit
 
 #chrootpart
+# colors
+NC='\033[0m' # No Color
+# Bold High Intensity
+BIYellow='\033[1;93m'     # Yellow
+BICyan='\033[1;96m'       # Cyan
+BIWhite='\033[1;97m'      # White
+# Underline
+UYellow='\033[4;33m'      # Yellow
+
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 echo -e "Using timedatectl to ensure the system clock is accurate"
@@ -184,8 +217,7 @@ if [ -d /sys/firmware/efi ]; then
     grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 else
     echo -e "Installing GRUB in BIOS\n"
-    bootloader=`cat bootloader.txt`
-    grub-install --recheck /dev/$bootloader
+    grub-install --recheck /dev/sda
 fi
 # Verifying if OSPROBER is allowed
 if [ -z $(grep -i "\nGRUB\_DISABLE\_OS\_PROBER=false" /etc/default/grub) ]; then
@@ -193,7 +225,9 @@ if [ -z $(grep -i "\nGRUB\_DISABLE\_OS\_PROBER=false" /etc/default/grub) ]; then
 fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
-unmount -R /mnt 
+# Instructions
+echo -e "\n-----------------------------------------------------"
+echo -e "\Don't forget to \"umount -R /mnt\" after restarting your Computer"
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 3 --------------------------------```````````````
