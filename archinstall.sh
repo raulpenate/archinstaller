@@ -42,7 +42,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     printf "\033c"
     lsblk
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Enter the /dev/drive where arch will be used (Ex: sda3): " ospartition
+    read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
     # Formating and mounting the partition
     mkfs.ext4 /dev/$ospartition
     mount /dev/$ospartition /mnt
@@ -120,7 +120,9 @@ echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 #```````````````------------------- Adding HOST, USERS and software ------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
 
-# If u insert ur user ends
+# setting COLEMAK as a main layout
+KEYMAP=colemak
+# creating hostname
 printf "\033c"
 echo -e "----------------------------------------------------------"
 echo -e "Insert your HOSTNAME (or how you wanna name your computer) :"
@@ -162,7 +164,7 @@ systemctl enable NetworkManager
 
 # Create your root password
 echo -e "\n-------------------------------------------------"
-echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
+echo -e "Insert your PASSWORD forROOT (AKA SUDO PASSWORD)"
 passwd
 # Create your user
 echo -e "\n---------------------------------------------------------------"
