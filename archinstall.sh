@@ -30,7 +30,7 @@ timedatectl set-ntp true
 #Disk formating and mounting
 CONFIRMATION=y
 read -p "Do you want to skipt disk formating? (y/n): " CONFIRMATION
-if [ "$CONFIRMATION" = "y" ]; then
+if [ "$CONFIRMATION" -ne "y" ]; then
     # Partitioning the disks
     cfdisk 
     # arch partition
