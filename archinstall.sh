@@ -187,7 +187,7 @@ else
 fi
 # Verifying if OSPROBER is allowed
 if [ -z $(grep -i "\nGRUB\_DISABLE\_OS\_PROBER=false" /etc/default/grub) ]; then
-    echo -e "GRUB_DISABLE_OS_PROBER=FALSE" >> /etc/default/grub
+    echo -e "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
 fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
