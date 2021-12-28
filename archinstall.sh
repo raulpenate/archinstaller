@@ -43,7 +43,6 @@ if [ "$CONFIRMATION" = "n" ]; then
     mkfs.ext4 /dev/$ospartition
     mount /dev/$ospartition /mnt
     # EFI or bios partition
-    printf "\033c"
     read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
@@ -56,7 +55,6 @@ if [ "$CONFIRMATION" = "n" ]; then
         mount /dev/$bootpartition /mnt/boot
     fi
     # EFI or bios partition
-    printf "\033c"
     read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
