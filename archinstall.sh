@@ -27,42 +27,47 @@ read -p "   --> This is a personal script, use it by your own risk, press ENTER 
 
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
-
-# Partitioning the disks
-cfdisk 
-# arch partition
-printf "\033c"
-lsblk
-echo -e "\n---------------------------------------------------------------------------------"
-read -p "Enter the /dev/drive where arch will be used (Ex: sda3): " ospartition
-# Formating and mounting the partition
-mkfs.ext4 /dev/$ospartition
-mount /dev/$ospartition /mnt
-# EFI or bios partition
-printf "\033c"
+#Disk formating and mounting
 CONFIRMATION=y
-read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
+read -p "Do you want to skipt disk formating? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
+    # Partitioning the disks
+    cfdisk 
+    # arch partition
+    printf "\033c"
     lsblk
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
+    read -p "Enter the /dev/drive where arch will be used (Ex: sda3): " ospartition
     # Formating and mounting the partition
-    mkfs.fat -F32 /dev/$bootpartition
-    mkdir /mnt/boot
-    mount /dev/$bootpartition /mnt/boot
-fi
-# EFI or bios partition
-printf "\033c"
-read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
-if [ "$CONFIRMATION" = "y" ]; then
-    lsblk
+    mkfs.ext4 /dev/$ospartition
+    mount /dev/$ospartition /mnt
+    # EFI or bios partition
+    printf "\033c"
+    read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Enter the /dev/drive where the SWAP will be used (Ex: sda2): " swappartition
-    # Formating and mounting the partition
-    mkswap /dev/$swappartition
-    swapon /dev/$swappartition
+    read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
+    if [ "$CONFIRMATION" = "y" ]; then
+        lsblk
+        echo -e "\n---------------------------------------------------------------------------------"
+        read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
+        # Formating and mounting the partition
+        mkfs.fat -F32 /dev/$bootpartition
+        mkdir /mnt/boot
+        mount /dev/$bootpartition /mnt/boot
+    fi
+    # EFI or bios partition
+    printf "\033c"
+    read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
+    echo -e "\n---------------------------------------------------------------------------------"
+    if [ "$CONFIRMATION" = "y" ]; then
+        lsblk
+        echo -e "\n---------------------------------------------------------------------------------"
+        read -p "Enter the /dev/drive where the SWAP will be used (Ex: sda2): " swappartition
+        # Formating and mounting the partition
+        mkswap /dev/$swappartition
+        swapon /dev/$swappartition
+    fi
 fi
-
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
 echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
