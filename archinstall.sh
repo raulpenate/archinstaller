@@ -46,7 +46,6 @@ if [ "$CONFIRMATION" = "n" ]; then
     printf "\033c"
     read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
     if [ "$CONFIRMATION" = "y" ]; then
         lsblk
         echo -e "\n---------------------------------------------------------------------------------"
@@ -72,7 +71,7 @@ fi
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
 echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
-pacstrap /mnt base linux linux-firmware vim
+pacstrap /mnt base linux linux-firmware vim sed
 
 # Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -86,7 +85,6 @@ arch-chroot /mnt ./archinstallpart2.sh
 exit
 
 #chrootpart
-pacman -S --noconfirm sed
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 echo -e "Using timedatectl to ensure the system clock is accurate"
@@ -100,13 +98,14 @@ ln -sf /usr/share/zoneinfo/America/El_Salvador /etc/localtime
 
 # Run hwclock2 to generate /etc/adjtime:
 echo -e "\nRunning hwclock to generate /etc/adjtime"
-locale-gen
+hwclock --systohc
 
 # Create the locale.conf file, and set the LANG variable accordingly:
 echo -e "-------------------------------------------------------"
 echo -e "Creating the locale file, and setting the LANG variable"
 echo -e "in this case LANG=en_US.UTF-8"
 echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
+locale-gen
 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 2 --------------------------------```````````````
@@ -178,7 +177,7 @@ echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 useradd -mG wheel $CREATEDUSERNAME
 # Create a password for your user
 echo -e "\n--------------------------------------"
-echo -e "Insert the PASSWORD Of $CREATEDUSERNAME"
+echo -e "Insert the PASSWORD of $CREATEDUSERNAME"
 passwd $CREATEDUSERNAME
 # Verifying if is EFI or not to install GRUB
 echo -e "\n--------------------------------------"
