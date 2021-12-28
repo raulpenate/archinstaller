@@ -32,6 +32,10 @@ timedatectl set-ntp true
 CONFIRMATION=y
 read -p "Do you want TO SKIPT disk formating? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "n" ]; then
+    #umounting if the script was runned already
+    umount -R /mnt
+    umount -R /mnt/boot
+    rm -rf /mnt/boot
     # Partitioning the disks
     cfdisk 
     # arch partition
