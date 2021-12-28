@@ -30,66 +30,42 @@ timedatectl set-ntp true
 
 # Partitioning the disks
 CONFIRMATION=y
-while [ "$CONFIRMATION" = "y" ]
-do
+if [ "$CONFIRMATION" = "y" ]; then
     cfdisk 
     lsblk
-    read -p "\nDo you want to continue? (y/n): " CONFIRMATION
-    if [ "$CONFIRMATION" = "y" ]; then
-        # Formating and mounting the partition
-        mkfs.btrfs $ospartition
-        mount $ospartition /mnt
-        break
-    fi
-    
-done
+    # Formating and mounting the partition
+    mkfs.btrfs $ospartition
+    mount $ospartition /mnt
+fi
 # arch partition
-while [ "$CONFIRMATION" = "y" ]
-do
     printf "\033c"
     lsblk
-    read -p "\nEnter the /drive/partition where arch will be used (Ex: /sda/sda3): " ospartition
-    read -p "\nDo you want to continue? (y/n): " CONFIRMATION
-    if [ "$CONFIRMATION" = "y" ]; then
-        # Formating and mounting the partition
-        mkfs.ext4 $ospartition
-        mount $ospartition /mnt
-        break
-    fi
-    
-done
+    read -p "Enter the /drive/partition where arch will be used (Ex: /sda/sda3): " ospartition
+    # Formating and mounting the partition
+    mkfs.ext4 $ospartition
+    mount $ospartition /mnt
 # EFI or bios partition
 read -p "Did you create an EPI or BIOS partition? (y/n): " CONFIRMATION
-while [ "$CONFIRMATION" = "y" ]
-do
+if [ "$CONFIRMATION" = "y" ]; then
     printf "\033c"
     lsblk
-    read -p "\nEnter the /drive/partition where the BOOTLOADER will be used (Ex: /sda/sda1): " bootpartition
-    read -p "\nDo you want to continue? (y/n): " CONFIRMATION
-    if [ "$CONFIRMATION" = "y" ]; then
-        # Formating and mounting the partition
-        mkfs.fat -F32 $bootpartition
-        mkdir /mnt/boot
-        mount $bootpartition /mnt/boot
-        break
-    fi
-done
+    read -p "Enter the /drive/partition where the BOOTLOADER will be used (Ex: /sda/sda1): " bootpartition
+    # Formating and mounting the partition
+    mkfs.fat -F32 $bootpartition
+    mkdir /mnt/boot
+    mount $bootpartition /mnt/boot
+fi
 # EFI or bios partition
 read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
-while [ "$CONFIRMATION" = "y" ]
-do
+if [ "$CONFIRMATION" = "y" ]; then
     printf "\033c"
     lsblk
-    read -p "\nEnter the /drive/partition where the SWAP will be used (Ex: /sda/sda2): " swappartition
-    read -p "\nDo you want to continue? (y/n): " CONFIRMATION
-    if [ "$CONFIRMATION" = "y" ]; then
-        # Formating and mounting the partition
-        mkswap $swappartition
-        swapon $swappartition
-        mount $bootpartition /mnt/boot
-        break
-    fi
-done
+    read -p "Enter the /drive/partition where the SWAP will be used (Ex: /sda/sda2): " swappartition
+    # Formating and mounting the partition
+    mkswap $swappartition
+    swapon $swappartition
+    mount $bootpartition /mnt/boot
+fi
 
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
