@@ -180,7 +180,7 @@ pacman -Sy --noconfirm mtools dosfstools base-devel linux-headers openssh curl m
 ## Windows system display
 pacman -Sy --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
 ## Window manager
-pacman -Sy --noconfirm i3-gaps dmenu nitrogen betterlockscreen
+pacman -Sy --noconfirm i3-gaps dmenu nitrogen 
 ## Login + Greeter
 pacman -Sy --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
 ## Fonts
@@ -192,8 +192,8 @@ pacman -Sy --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
 ## Wifi
 pacman -Sy --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
 ## Software of my preference
-pacman -Sy --noconfirm tilix firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git
-pacman -Sy --noconfirm picom nitrogen feh pcmanfm ranger rofi zsh most
+pacman -Sy --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git
+pacman -Sy --noconfirm picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance
 pacman -Sy --noconfirm zathura zathura-pdf-mupdf ffmpeg imagemagick
 pacman -Sy --noconfirm zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl
 pacman -Sy --noconfirm arandr thunar htop bashtop
@@ -201,7 +201,8 @@ pacman -Sy --noconfirm arandr thunar htop bashtop
 # Enabling software
 systemctl enable NetworkManager
 systemctl enable lightdm
-
+echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
+echo "user-session=i3" >> /etc/lightdm/lightdm.conf
 # Create your root password
 echo -e "\n-------------------------------------------------"
 echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
@@ -238,7 +239,6 @@ USERPATH=/home/$CREATEDUSERNAME/archinstallpart3.sh
 sed '1,/^#userpart$/d' archinstallpart2.sh > $USERPATH
 chown $CREATEDUSERNAME:$CREATEDUSERNAME $USERPATH
 chmod +x $USERPATH
-su -c $USERPATH -s /bin/sh $CREATEDUSERNAME
 
 # Instructions
 echo -e "\n----------------------------------------------------------------"
@@ -264,7 +264,6 @@ makepkg -si
 yay -Syy
 yay -S --nocofirm polybar papirus-nord dunst kity picom pywal-git feh lightdm-webkit-theme-aether
 yay -S --nocofirm nerd-fonts-roboto-mono
-sudo echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 ## In case i need polybar themes
 #cd ~/.config/polybar git clone --depth=1 https://github.com/adi1090x/polybar-themes.git 
 #cd polybar-themes 
