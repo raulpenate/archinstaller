@@ -108,7 +108,7 @@ pacstrap /mnt base linux linux-firmware vim sed
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # With sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode
-sed '1,/^#chrootpart$/d' /root/arch-installer/archinstall.sh > /mnt/archinstallpart2.sh
+sed '1,/^#chrootpart$/d' arch-installer/archinstall.sh > /mnt/archinstallpart2.sh
 chmod +x /mnt/archinstallpart2.sh
 
 # Changing to chroot
