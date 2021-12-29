@@ -180,7 +180,7 @@ pacman -Sy --noconfirm mtools dosfstools base-devel linux-headers openssh curl m
 ## Windows system display
 pacman -Sy --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
 ## Window manager
-pacman -Sy --noconfirm i3-gaps dmenu nitrogen 
+pacman -Sy --noconfirm i3-gaps dmenu nitrogen i3status
 ## Login + Greeter
 pacman -Sy --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
 ## Fonts
@@ -262,8 +262,8 @@ makepkg -si
 # software needed for dotfiles
 # installing package with yay
 yay -Syy
-yay -S --nocofirm polybar papirus-nord dunst kity picom pywal-git feh lightdm-webkit-theme-aether
-yay -S --nocofirm nerd-fonts-roboto-mono
+yay -S --noconfirm polybar papirus-nord dunst kity picom pywal-git feh lightdm-webkit-theme-aether
+yay -S --noconfirm nerd-fonts-roboto-mono
 ## In case i need polybar themes
 #cd ~/.config/polybar git clone --depth=1 https://github.com/adi1090x/polybar-themes.git 
 #cd polybar-themes 
@@ -283,8 +283,8 @@ sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)"
 sudo chsh -s /bin/zsh
 echo -e 'eval "$(starship init zsh)"' >> ~/.zshrc
 
-sudo cd ~/.config
-sudo git clone https://github.com/raulpenate/i3dotfiles
-ll
+cd ~/
+git clone https://github.com/raulpenate/i3dotfiles
+ls -la
 
 # to automatically delete this file
