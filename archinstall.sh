@@ -254,24 +254,37 @@ exit
 #```````````````----------------------------------------------------------------------```````````````
 
 # installing yay
+
 cd /opt
 sudo git clone https://aur.archlinux.org/yay-git.git
 sudo chown -R $USER:$USER ./yay-git
 cd yay-git
 makepkg -si
+# software needed for dotfiles
+# installing package with yay
+yay -Syy
+yay -S --nocofirm polybar papirus-nord dunst kity picom pywal-git feh 
+yay -S --nocofirm nerd-fonts-roboto-mono
+## In case i need polybar themes
+#cd ~/.config/polybar git clone --depth=1 https://github.com/adi1090x/polybar-themes.git 
+#cd polybar-themes 
+#chmod +x setup.sh
 # installing Qogir cursor
 cd /opt
 sudo git clone https://aur.archlinux.org/yay-git.git
 sudo chown -R $USER:$USER cd Qogir-icon-theme/
 ./Qogir-icon-theme/install.sh
+# installing nord themes
+cd /usr/share/themes/
+sudo git clone https://github.com/EliverLara/Nordic
+sudo git clone https://github.com/dracula/gtk
+# installing starship and myzsh
+sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+echo -e 'eval "$(starship init zsh)"' >> ~/.zshrc
 
-# installing package with yay
-yay -Syy
-yay -S --nocofirm polybar papirus-nord dunst kity
-yay -S --nocofirm nerd-fonts-roboto-mono
-cd ~/.config/polybar git clone --depth=1 https://github.com/adi1090x/polybar-themes.git 
-cd polybar-themes 
-chmod +x setup.sh
-
+sudo cd ~/.config
+git clone https://github.com/raulpenate/i3dotfiles
+ll
 
 # to automatically delete this file
