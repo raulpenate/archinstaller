@@ -108,7 +108,7 @@ pacstrap /mnt base linux linux-firmware vim sed
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # With sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode
-sed '1,/^#chrootpart$/d' arch-installer/archinstall.sh > /mnt/archinstallpart2.sh
+sed '1,/^#chrootpart$/d' archinstaller/archinstall.sh > /mnt/archinstallpart2.sh
 chmod +x /mnt/archinstallpart2.sh
 
 # Changing to chroot
@@ -205,7 +205,7 @@ echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 
 # Create your root password
 echo -e "\n-------------------------------------------------"
-echo -e "Insert your PASSWORD forROOT (AKA SUDO PASSWORD)"
+echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
 passwd
 # Create your user
 echo -e "\n---------------------------------------------------------------"
@@ -236,8 +236,8 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 # With sed, cutting this script until userpartchrootpart to execute it later from /mnt in chroot mode
 USERPATH=/home/$CREATEDUSERNAME/archinstallpart3.sh
-sed '1,/^#userpart$/d' archinstallpart2 > USERPATH
-chown $CREATEDUSERNAME:$CREATEDUSERNAME USERPATH
+sed '1,/^#userpart$/d' archinstallpart2 > $USERPATH
+chown $CREATEDUSERNAME:$CREATEDUSERNAME $USERPATH
 chmod +x $USERPATH
 su -c $USERPATH -s /bin/sh $CREATEDUSERNAME
 
