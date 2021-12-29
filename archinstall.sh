@@ -39,9 +39,9 @@ Do me a favor and listen the wrecks and the regrettes.
 "
 
 if [ -d /sys/firmware/efi ]; then
-    echo -e "\nYour device is$BIYellow EFI$BIWhite, if you create a bootloader use $BIYellow\"EFI System\"$BIWhite AND USE $BIYellow\"GPT\"$UYellow\n"
+    echo -e "\nYour device is$BIYellow EFI$BIWhite, if you create a bootloader use $BIYellow\"EFI System\"$BIWhite and use a $BIYellow\"GPT\"$BIWhite partition$UYellow\n"
 else
-    echo -e "\nYour device is$BIYellow BIOS$BIWhite, if you create a bootloader use $BIYellow\"BIOS boot\"$BIWhite AND USE $BIYellow\"MBR\"$UYellow\n"
+    echo -e "\nYour device is$BIYellow BIOS$BIWhite, if you create a bootloader use $BIYellow\"BIOS boot\"$BIWhite and use a $BIYellow\"DOS or MBR\"$BIWhite partition$UYellow\n"
 fi
 
 read -p "--> This is a personal script, use it by your own risk, press ENTER to continue... <--"
@@ -116,6 +116,11 @@ arch-chroot /mnt ./archinstallpart2.sh
 exit
 
 #chrootpart
+#```````````````----------------------------------------------------------------------```````````````
+#```````````````------------------------------ PART 2 --------------------------------```````````````
+#```````````````------------------- Adding HOST, USERS and software ------------------```````````````
+#```````````````----------------------------------------------------------------------```````````````
+
 # colors
 NC='\033[0m' # No Color
 # Bold High Intensity
@@ -148,11 +153,6 @@ echo -e "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
-#```````````````----------------------------------------------------------------------```````````````
-#```````````````------------------------------ PART 2 --------------------------------```````````````
-#```````````````------------------- Adding HOST, USERS and software ------------------```````````````
-#```````````````----------------------------------------------------------------------```````````````
-
 # setting COLEMAK as a main layout
 KEYMAP=colemak
 # creating hostname
@@ -176,7 +176,13 @@ mkinitcpio -P
 # Updating repositories
 pacman -Syy
 ## Basic things for arch
-pacman -Sy --noconfirm mtools dosfstools base-devel linux-headers openssh
+pacman -Sy --noconfirm mtools dosfstools base-devel linux-headers openssh curl man-db
+## Windows system display
+pacman -Sy --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
+## Window manager
+pacman -Sy --noconfirm i3-gaps dmenu nitrogen betterlockscreen
+## Login + Greeter
+pacman -Sy --noconfirm lightdm lightdm-webkit2-greeter lightdm-webkit-theme-aether lightdm-gtk-greeter-settings
 ## Fonts
 pacman -Sy --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
 ## Grub stuff
@@ -187,13 +193,15 @@ pacman -Sy --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
 pacman -Sy --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
 ## Software of my preference
 pacman -Sy --noconfirm tilix firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git
-pacman -Sy --noconfirm xorg i3-gaps dmenu nitrogen curl man-db
 pacman -Sy --noconfirm picom nitrogen feh pcmanfm ranger rofi zsh most
 pacman -Sy --noconfirm zathura zathura-pdf-mupdf ffmpeg imagemagick
 pacman -Sy --noconfirm zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl
 pacman -Sy --noconfirm arandr thunar htop bashtop
 
+# Enabling software
 systemctl enable NetworkManager
+systemctl enable lightdm
+echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 
 # Create your root password
 echo -e "\n-------------------------------------------------"
@@ -225,14 +233,45 @@ if [ -z $(grep -i "\nGRUB\_DISABLE\_OS\_PROBER=false" /etc/default/grub) ]; then
 fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
-# Instructions
-echo -e "\n-----------------------------------------------------"
-echo -e "\Don't forget to \"umount -R /mnt\" after restarting your Computer"
 
+# With sed, cutting this script until userpartchrootpart to execute it later from /mnt in chroot mode
+USERPATH=/home/$CREATEDUSERNAME/archinstallpart3.sh
+sed '1,/^#userpart$/d' archinstallpart2 > USERPATH
+chown $CREATEDUSERNAME:$CREATEDUSERNAME USERPATH
+chmod +x $USERPATH
+su -c $USERPATH -s /bin/sh $CREATEDUSERNAME
+
+# Instructions
+echo -e "\n----------------------------------------------------------------"
+echo -e "Don't forget to \"umount -R /mnt\" after restarting your Computer"
+echo -e "------------------------------------------------------------------\n"
+exit 
+
+#userpart
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 3 --------------------------------```````````````
 #```````````````----------------------------- DOTFILES -------------------------------``````````````` 
 #```````````````----------------------------------------------------------------------```````````````
 
+# installing yay
+cd /opt
+sudo git clone https://aur.archlinux.org/yay-git.git
+sudo chown -R $USER:$USER ./yay-git
+cd yay-git
+makepkg -si
+# installing Qogir cursor
+cd /opt
+sudo git clone https://aur.archlinux.org/yay-git.git
+sudo chown -R $USER:$USER cd Qogir-icon-theme/
+./Qogir-icon-theme/install.sh
+
+# installing package with yay
+yay -Syy
+yay -S --nocofirm polybar papirus-nord dunst kity
+yay -S --nocofirm nerd-fonts-roboto-mono
+cd ~/.config/polybar git clone --depth=1 https://github.com/adi1090x/polybar-themes.git 
+cd polybar-themes 
+chmod +x setup.sh
+
+
 # to automatically delete this file
-#rm 
