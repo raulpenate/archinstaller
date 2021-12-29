@@ -236,7 +236,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 # With sed, cutting this script until userpartchrootpart to execute it later from /mnt in chroot mode
 USERPATH=/home/$CREATEDUSERNAME/archinstallpart3.sh
-sed '1,/^#userpart$/d' archinstallpart2 > $USERPATH
+sed '1,/^#userpart$/d' archinstallpart2.sh > $USERPATH
 chown $CREATEDUSERNAME:$CREATEDUSERNAME $USERPATH
 chmod +x $USERPATH
 su -c $USERPATH -s /bin/sh $CREATEDUSERNAME
