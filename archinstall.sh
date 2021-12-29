@@ -154,7 +154,7 @@ locale-gen
 echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 # setting COLEMAK as a main layout
-KEYMAP=colemak
+echo -e "KEYMAP=colemak" >> /etc/vconsole.conf
 # creating hostname
 printf "\033c"
 echo -e "----------------------------------------------------------"
@@ -201,7 +201,6 @@ pacman -Sy --noconfirm arandr thunar htop bashtop
 # Enabling software
 systemctl enable NetworkManager
 systemctl enable lightdm
-echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 
 # Create your root password
 echo -e "\n-------------------------------------------------"
@@ -245,7 +244,7 @@ su -c $USERPATH -s /bin/sh $CREATEDUSERNAME
 echo -e "\n----------------------------------------------------------------"
 echo -e "Don't forget to \"umount -R /mnt\" after restarting your Computer"
 echo -e "------------------------------------------------------------------\n"
-exit 
+exit 1
 
 #userpart
 #```````````````----------------------------------------------------------------------```````````````
@@ -265,6 +264,7 @@ makepkg -si
 yay -Syy
 yay -S --nocofirm polybar papirus-nord dunst kity picom pywal-git feh lightdm-webkit-theme-aether
 yay -S --nocofirm nerd-fonts-roboto-mono
+sudo echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 ## In case i need polybar themes
 #cd ~/.config/polybar git clone --depth=1 https://github.com/adi1090x/polybar-themes.git 
 #cd polybar-themes 
@@ -279,12 +279,13 @@ cd /usr/share/themes/
 sudo git clone https://github.com/EliverLara/Nordic
 sudo git clone https://github.com/dracula/gtk
 # installing starship and myzsh
-sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)"
 sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+sudo chsh -s /bin/zsh
 echo -e 'eval "$(starship init zsh)"' >> ~/.zshrc
 
 sudo cd ~/.config
-git clone https://github.com/raulpenate/i3dotfiles
+sudo git clone https://github.com/raulpenate/i3dotfiles
 ll
 
 # to automatically delete this file
