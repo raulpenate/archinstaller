@@ -66,6 +66,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     # Partitioning the disks
     cfdisk 
     # EFI or bios partition
+    printf "\033c"
     echo -e "\n---------------------------------------------------------------------------------"
     read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
@@ -93,7 +94,6 @@ if [ "$CONFIRMATION" = "y" ]; then
 fi
 
 # arch partition
-printf "\033c"
 lsblk
 echo -e "$NC\n---------------------------------------------------------------------------------"
 read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
@@ -249,9 +249,9 @@ exit 1
 
 # installing yay
 setxkbmap -layout us colemak
-cd /opt
+cd ~/
 git clone https://aur.archlinux.org/yay-git.git
-chown -R $USER:$USER ./yay-git
+chown -R $USER:$USER yay-git
 cd yay-git
 makepkg -si
 # software needed for dotfiles
