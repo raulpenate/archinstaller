@@ -35,7 +35,7 @@ $BICyan
  ░           ░       ░                 ░  ░    ░  ░    ░  ░   ░  ░   ░     
                                                                                 
 $BIWhite
-Do me a favor and listen the wrecks and the regrettes.                                                                    
+    Do me a favor and listen the wrecks and the regrettes.                                                                    
 "
 
 if [ -d /sys/firmware/efi ]; then
@@ -65,17 +65,9 @@ if [ "$CONFIRMATION" = "y" ]; then
     rm -rf /mnt/efi 
     # Partitioning the disks
     cfdisk 
-    # arch partition
-    printf "\033c"
-    lsblk
-    echo -e "$NC\n---------------------------------------------------------------------------------"
-    read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
-    # Formating and mounting the partition
-    mkfs.ext4 /dev/$ospartition
-    mount /dev/$ospartition /mnt
     # EFI or bios partition
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Did you create an \"EPI or BIOS partition\"? (y/n): " CONFIRMATION
+    read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
         lsblk
@@ -100,6 +92,15 @@ if [ "$CONFIRMATION" = "y" ]; then
     fi
 fi
 
+# arch partition
+printf "\033c"
+lsblk
+echo -e "$NC\n---------------------------------------------------------------------------------"
+read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
+# Formating and mounting the partition
+mkfs.ext4 /dev/$ospartition
+mount /dev/$ospartition /mnt
+
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
 echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
 pacstrap /mnt base linux linux-firmware vim sed
@@ -120,15 +121,6 @@ exit
 #```````````````------------------------------ PART 2 --------------------------------```````````````
 #```````````````------------------- Adding HOST, USERS and software ------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
-
-# colors
-NC='\033[0m' # No Color
-# Bold High Intensity
-BIYellow='\033[1;93m'     # Yellow
-BICyan='\033[1;96m'       # Cyan
-BIWhite='\033[1;97m'      # White
-# Underline
-UYellow='\033[4;33m'      # Yellow
 
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
@@ -155,7 +147,7 @@ echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 # setting COLEMAK as a main layout
 echo -e "KEYMAP=colemak" >> /etc/vconsole.conf
-# creating hostname
+# creatinzathurag hostname
 printf "\033c"
 echo -e "----------------------------------------------------------"
 echo -e "Insert your HOSTNAME (or how you wanna name your computer) :"
@@ -176,33 +168,36 @@ mkinitcpio -P
 # Updating repositories
 pacman -Syy
 ## Basic things for arch
-pacman -Sy --noconfirm mtools dosfstools base-devel linux-headers openssh curl man-db
+pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl man-db
 ## Windows system display
-pacman -Sy --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
+pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
 ## Window manager
-pacman -Sy --noconfirm i3-gaps dmenu nitrogen i3status
+pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
 ## Login + Greeter
-pacman -Sy --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
+pacman -S --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
 ## Fonts
-pacman -Sy --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
+pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
 ## Grub stuff
-pacman -Sy --noconfirm grub efibootmgr os-prober
+pacman -S --noconfirm grub efibootmgr os-prober
 ## bluetooth
-pacman -Sy --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
+pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
 ## Wifi
-pacman -Sy --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
+pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
 ## Software of my preference
-pacman -Sy --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git
-pacman -Sy --noconfirm picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance
-pacman -Sy --noconfirm zathura zathura-pdf-mupdf ffmpeg imagemagick
-pacman -Sy --noconfirm zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl
-pacman -Sy --noconfirm arandr thunar htop bashtop
+pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
+    picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance \
+    zathura zathura-pdf-mupdf ffmpeg imagemagick \
+    zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
+    arandr thunar htop bashtop stow \
 
 # Enabling software
 systemctl enable NetworkManager
 systemctl enable lightdm
 echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 echo "user-session=i3" >> /etc/lightdm/lightdm.conf
+echo "exec \"setxkbmap us -variant colemak\"" >> /etc/i3/config
+localectl set-keymap colemak
+
 # Create your root password
 echo -e "\n-------------------------------------------------"
 echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
@@ -253,38 +248,35 @@ exit 1
 #```````````````----------------------------------------------------------------------```````````````
 
 # installing yay
-
+setxkbmap -layout us colemak
 cd /opt
-sudo git clone https://aur.archlinux.org/yay-git.git
-sudo chown -R $USER:$USER ./yay-git
+git clone https://aur.archlinux.org/yay-git.git
+chown -R $USER:$USER ./yay-git
 cd yay-git
 makepkg -si
 # software needed for dotfiles
 # installing package with yay
 yay -Syy
-yay -S --noconfirm polybar papirus-nord dunst kity picom pywal-git feh lightdm-webkit-theme-aether
-yay -S --noconfirm nerd-fonts-roboto-mono
-## In case i need polybar themes
-#cd ~/.config/polybar git clone --depth=1 https://github.com/adi1090x/polybar-themes.git 
-#cd polybar-themes 
-#chmod +x setup.sh
+yay -S --noconfirm cava dunst mpd ncmpcpp polybar papirus-nord  kity picom pywal-git feh lightdm-webkit-theme-aether \
+    nerd-fonts-roboto-mono
 # installing Qogir cursor
 cd /opt
-sudo git clone https://aur.archlinux.org/yay-git.git
-sudo chown -R $USER:$USER cd Qogir-icon-theme/
+git clone https://aur.archlinux.org/yay-git.git
+chown -R $USER:$USER cd Qogir-icon-theme/
 ./Qogir-icon-theme/install.sh
 # installing nord themes
 cd /usr/share/themes/
-sudo git clone https://github.com/EliverLara/Nordic
-sudo git clone https://github.com/dracula/gtk
+git clone https://github.com/EliverLara/Nordic
+git clone https://github.com/dracula/gtk
 # installing starship and myzsh
-sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-sudo sh -c "$(curl -fsSL https://starship.rs/install.sh)"
-sudo chsh -s /bin/zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+chsh -s $(which zsh)
 echo -e 'eval "$(starship init zsh)"' >> ~/.zshrc
 
 cd ~/
 git clone https://github.com/raulpenate/i3dotfiles
 ls -la
+
 
 # to automatically delete this file
