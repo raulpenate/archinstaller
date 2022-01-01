@@ -45,52 +45,44 @@ else
 fi
 
 read -p "--> This is a personal script, use it by your own risk, press ENTER to continue... <--"
-
+echo -e "$NC"
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 1 --------------------------------```````````````
 #```````````````----------------------- Installing Arch and basics -------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
 
-#Adding more paralleldownloads
+# Adding more paralleldownloads
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
-#Disk formating and mounting
-read -p "Do you want to format and partition your disk? (y/n): " CONFIRMATION
+# Disk formating and mounting
+# Partitioning the disks
+cfdisk 
+# EFI or bios partition
+printf "\033c"
+echo -e "\n---------------------------------------------------------------------------------"
+read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
+echo -e "\n---------------------------------------------------------------------------------"
 if [ "$CONFIRMATION" = "y" ]; then
-    #umounting if the script was runned already
-    umount -R /mnt
-    umount -R /mnt/boot
-    rm -rf /mnt/boot
-    rm -rf /mnt/efi 
-    # Partitioning the disks
-    cfdisk 
-    # EFI or bios partition
-    printf "\033c"
+    lsblk
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
+    read -p "Enter the drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
     echo -e "\n---------------------------------------------------------------------------------"
-    if [ "$CONFIRMATION" = "y" ]; then
-        lsblk
-        echo -e "\n---------------------------------------------------------------------------------"
-        read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
-        echo -e "\n---------------------------------------------------------------------------------"
-        # Formating and mounting the partition
-        mkfs.fat -F32 /dev/$bootpartition
-        mkdir /mnt/boot
-        mount /dev/$bootpartition /mnt/boot
-    fi
-    # EFI or bios partition
-    read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
+    # Formating and mounting the partition
+    mkfs.fat -F32 /dev/$bootpartition
+    mkdir /mnt/boot
+    mount /dev/$bootpartition /mnt/boot
+fi
+# EFI or bios partition
+read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
+echo -e "\n---------------------------------------------------------------------------------"
+if [ "$CONFIRMATION" = "y" ]; then
+    lsblk
     echo -e "\n---------------------------------------------------------------------------------"
-    if [ "$CONFIRMATION" = "y" ]; then
-        lsblk
-        echo -e "\n---------------------------------------------------------------------------------"
-        read -p "Enter the /dev/drive where the SWAP will be used (Ex: sda2): " swappartition
-        # Formating and mounting the partition
-        mkswap /dev/$swappartition
-        swapon /dev/$swappartition
-    fi
+    read -p "Enter the drive where the SWAP will be used (Ex: sda2): " swappartition
+    # Formating and mounting the partition
+    mkswap /dev/$swappartition
+    swapon /dev/$swappartition
 fi
 
 # arch partition
@@ -116,7 +108,7 @@ chmod +x /mnt/archinstallpart2.sh
 arch-chroot /mnt ./archinstallpart2.sh
 exit
 
-#chrootpart
+#chrootpart 
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 2 --------------------------------```````````````
 #```````````````------------------- Adding HOST, USERS and software ------------------```````````````
@@ -145,7 +137,7 @@ echo -e "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
-# setting COLEMAK as a main layout
+# Setting COLEMAK as a main layout
 echo -e "KEYMAP=colemak" >> /etc/vconsole.conf
 # creatinzathurag hostname
 printf "\033c"
@@ -165,26 +157,16 @@ echo -e "127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME" >> /etc/hosts
 # Creating a new initramfs is usually not required, because mkinitcpio was run on installation of the kernel package with pacstrap.
 # For LVM, system encryption or RAID, modify mkinitcpio.conf and recreate the initramfs image:
 mkinitcpio -P
-# Updating repositories
 pacman -Syy
-## Basic things for arch
-pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl man-db
-## Windows system display
-pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
-## Window manager
-pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
-## Login + Greeter
-pacman -S --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
-## Fonts
-pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
-## Grub stuff
-pacman -S --noconfirm grub efibootmgr os-prober
-## bluetooth
-pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
-## Wifi
-pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
-## Software of my preference
-pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
+pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl wget man-db \
+    xorg xorg-server xorg-xinit xorg-xbacklight \
+    i3-gaps dmenu nitrogen i3status \
+    lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings \
+    noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
+    grub efibootmgr os-prober \
+    bluez bluez-utils blueman pulseaudio-bluetooth \
+    networkmanager network-manager-applet wireless_tools wpa_supplicant
+    tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
     picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance \
     zathura zathura-pdf-mupdf ffmpeg imagemagick \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
@@ -195,7 +177,8 @@ systemctl enable NetworkManager
 systemctl enable lightdm
 echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 echo "user-session=i3" >> /etc/lightdm/lightdm.conf
-echo "exec \"setxkbmap us -variant colemak\"" >> /etc/i3/config
+echo "exec \"setxkbmap us -variant colemak\"" >
+echo "display-setup-scrip=setxkbmap us -variant colemak" >> /etc/lightdm/lightdm.conf``
 localectl set-keymap colemak
 
 # Create your root password
@@ -229,7 +212,7 @@ fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-# With sed, cutting this script until userpartchrootpart to execute it later from /mnt in chroot mode
+# With sed, cutting this script until userpart to execute it after reboot
 USERPATH=/home/$CREATEDUSERNAME/archinstallpart3.sh
 sed '1,/^#userpart$/d' archinstallpart2.sh > $USERPATH
 chown $CREATEDUSERNAME:$CREATEDUSERNAME $USERPATH
@@ -247,36 +230,11 @@ exit 1
 #```````````````----------------------------- DOTFILES -------------------------------``````````````` 
 #```````````````----------------------------------------------------------------------```````````````
 
-# installing yay
-setxkbmap -layout us colemak
-cd ~/
-git clone https://aur.archlinux.org/yay-git.git
-chown -R $USER:$USER yay-git
-cd yay-git
-makepkg -si
-# software needed for dotfiles
-# installing package with yay
+# Installing yay
+git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+# Software needed for dotfiles:
+# Installing package with yay
 yay -Syy
 yay -S --noconfirm cava dunst mpd ncmpcpp polybar papirus-nord  kity picom pywal-git feh lightdm-webkit-theme-aether \
     nerd-fonts-roboto-mono
-# installing Qogir cursor
-cd /opt
-git clone https://aur.archlinux.org/yay-git.git
-chown -R $USER:$USER cd Qogir-icon-theme/
-./Qogir-icon-theme/install.sh
-# installing nord themes
-cd /usr/share/themes/
-git clone https://github.com/EliverLara/Nordic
-git clone https://github.com/dracula/gtk
-# installing starship and myzsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-sh -c "$(curl -fsSL https://starship.rs/install.sh)"
-chsh -s $(which zsh)
-echo -e 'eval "$(starship init zsh)"' >> ~/.zshrc
-
-cd ~/
-git clone https://github.com/raulpenate/i3dotfiles
-ls -la
-
-
-# to automatically delete this file
+# Installing Qogir cursor
