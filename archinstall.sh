@@ -169,7 +169,7 @@ pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl wg
     picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance \
     zathura zathura-pdf-mupdf ffmpeg imagemagick \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
-    arandr thunar htop bashtop stow \
+    arandr thunar htop bashtop stow
 
 # Enabling software
 systemctl enable NetworkManager
