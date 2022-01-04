@@ -106,7 +106,6 @@ chmod +x /mnt/archinstallpart2.sh
 
 # Changing to chroot
 arch-chroot /mnt ./archinstallpart2.sh
-exit
 
 #chrootpart 
 #```````````````----------------------------------------------------------------------```````````````
