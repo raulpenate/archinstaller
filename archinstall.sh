@@ -45,44 +45,52 @@ else
 fi
 
 read -p "--> This is a personal script, use it by your own risk, press ENTER to continue... <--"
-echo -e "$NC"
+
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 1 --------------------------------```````````````
 #```````````````----------------------- Installing Arch and basics -------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
 
-# Adding more paralleldownloads
+#Adding more paralleldownloads
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
-# Disk formating and mounting
-# Partitioning the disks
-cfdisk 
-# EFI or bios partition
-printf "\033c"
-echo -e "\n---------------------------------------------------------------------------------"
-read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
-echo -e "\n---------------------------------------------------------------------------------"
+#Disk formating and mounting
+read -p "Do you want to format and partition your disk? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
-    lsblk
+    #umounting if the script was runned already
+    umount -R /mnt
+    umount -R /mnt/boot
+    rm -rf /mnt/boot
+    rm -rf /mnt/efi 
+    # Partitioning the disks
+    cfdisk 
+    # EFI or bios partition
+    printf "\033c"
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Enter the drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
+    read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
-    # Formating and mounting the partition
-    mkfs.fat -F32 /dev/$bootpartition
-    mkdir /mnt/boot
-    mount /dev/$bootpartition /mnt/boot
-fi
-# EFI or bios partition
-read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
-echo -e "\n---------------------------------------------------------------------------------"
-if [ "$CONFIRMATION" = "y" ]; then
-    lsblk
+    if [ "$CONFIRMATION" = "y" ]; then
+        lsblk
+        echo -e "\n---------------------------------------------------------------------------------"
+        read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
+        echo -e "\n---------------------------------------------------------------------------------"
+        # Formating and mounting the partition
+        mkfs.fat -F32 /dev/$bootpartition
+        mkdir /mnt/boot
+        mount /dev/$bootpartition /mnt/boot
+    fi
+    # EFI or bios partition
+    read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Enter the drive where the SWAP will be used (Ex: sda2): " swappartition
-    # Formating and mounting the partition
-    mkswap /dev/$swappartition
-    swapon /dev/$swappartition
+    if [ "$CONFIRMATION" = "y" ]; then
+        lsblk
+        echo -e "\n---------------------------------------------------------------------------------"
+        read -p "Enter the /dev/drive where the SWAP will be used (Ex: sda2): " swappartition
+        # Formating and mounting the partition
+        mkswap /dev/$swappartition
+        swapon /dev/$swappartition
+    fi
 fi
 
 # arch partition
@@ -107,7 +115,7 @@ chmod +x /mnt/archinstallpart2.sh
 # Changing to chroot
 arch-chroot /mnt ./archinstallpart2.sh
 
-#chrootpart 
+#chrootpart
 #```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 2 --------------------------------```````````````
 #```````````````------------------- Adding HOST, USERS and software ------------------```````````````
@@ -136,7 +144,7 @@ echo -e "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
-# Setting COLEMAK as a main layout
+# setting COLEMAK as a main layout
 echo -e "KEYMAP=colemak" >> /etc/vconsole.conf
 # creatinzathurag hostname
 printf "\033c"
@@ -156,20 +164,30 @@ echo -e "127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME" >> /etc/hosts
 # Creating a new initramfs is usually not required, because mkinitcpio was run on installation of the kernel package with pacstrap.
 # For LVM, system encryption or RAID, modify mkinitcpio.conf and recreate the initramfs image:
 mkinitcpio -P
+# Updating repositories
 pacman -Syy
-pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl wget man-db
+## Basic things for arch
+pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl man-db
+## Windows system display
 pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
+## Window manager
 pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
+## Login + Greeter
 pacman -S --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
+## Fonts
 pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
+## Grub stuff
 pacman -S --noconfirm grub efibootmgr os-prober
+## bluetooth
 pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
+## Wifi
 pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
-pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git
-pacman -S --noconfirm picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance
-pacman -S --noconfirm zathura zathura-pdf-mupdf ffmpeg imagemagick
-pacman -S --noconfirm zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl
-pacman -S --noconfirm arandr thunar htop bashtop stow
+## Software of my preference
+pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
+    picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance \
+    zathura zathura-pdf-mupdf ffmpeg imagemagick \
+    zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
+    arandr thunar htop bashtop stow \
 
 # Enabling software
 systemctl enable NetworkManager
@@ -211,7 +229,7 @@ fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-# With sed, cutting this script until userpart to execute it after reboot
+# With sed, cutting this script until userpartchrootpart to execute it later from /mnt in chroot mode
 USERPATH=/home/$CREATEDUSERNAME/archinstallpart3.sh
 sed '1,/^#userpart$/d' archinstallpart2.sh > $USERPATH
 chown $CREATEDUSERNAME:$CREATEDUSERNAME $USERPATH
@@ -229,7 +247,7 @@ exit 1
 #```````````````----------------------------- DOTFILES -------------------------------``````````````` 
 #```````````````----------------------------------------------------------------------```````````````
 
-setxkbmap us -variant colemak
+setxkbmap -layout us colemak
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 # Software needed for dotfiles:
