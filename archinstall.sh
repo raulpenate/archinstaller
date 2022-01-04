@@ -157,19 +157,19 @@ echo -e "127.0.1.1	$HOSTNAME.localdomain	$HOSTNAME" >> /etc/hosts
 # For LVM, system encryption or RAID, modify mkinitcpio.conf and recreate the initramfs image:
 mkinitcpio -P
 pacman -Syy
-pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl wget man-db \
-    xorg xorg-server xorg-xinit xorg-xbacklight \
-    i3-gaps dmenu nitrogen i3status \
-    lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings \
-    noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
-    grub efibootmgr os-prober \
-    bluez bluez-utils blueman pulseaudio-bluetooth \
-    networkmanager network-manager-applet wireless_tools wpa_supplicant
-    tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
-    picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance \
-    zathura zathura-pdf-mupdf ffmpeg imagemagick \
-    zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
-    arandr thunar htop bashtop stow
+pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl wget man-db
+pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
+pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
+pacman -S --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
+pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
+pacman -S --noconfirm grub efibootmgr os-prober
+pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
+pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
+pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git
+pacman -S --noconfirm picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance
+pacman -S --noconfirm zathura zathura-pdf-mupdf ffmpeg imagemagick
+pacman -S --noconfirm zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl
+pacman -S --noconfirm arandr thunar htop bashtop stow
 
 # Enabling software
 systemctl enable NetworkManager
