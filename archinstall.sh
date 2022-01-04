@@ -177,7 +177,7 @@ systemctl enable NetworkManager
 systemctl enable lightdm
 echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 echo "user-session=i3" >> /etc/lightdm/lightdm.conf
-echo "exec \"setxkbmap us -variant colemak\"" >
+echo "exec \"setxkbmap us -variant colemak\"" >> /etc/i3/config
 echo "display-setup-scrip=setxkbmap us -variant colemak" >> /etc/lightdm/lightdm.conf``
 localectl set-keymap colemak
 
@@ -230,11 +230,11 @@ exit 1
 #```````````````----------------------------- DOTFILES -------------------------------``````````````` 
 #```````````````----------------------------------------------------------------------```````````````
 
+setxkbmap us -variant colemak
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 # Software needed for dotfiles:
 # Installing package with yay
 yay -Syy
-yay -S --noconfirm cava dunst mpd ncmpcpp polybar papirus-nord  kity picom pywal-git feh lightdm-webkit-theme-aether \
+yay -S cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh lightdm-webkit-theme-aether \
     nerd-fonts-roboto-mono
-# Installing Qogir cursor
