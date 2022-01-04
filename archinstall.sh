@@ -99,7 +99,7 @@ pacstrap /mnt base linux linux-firmware vim sed
 
 # Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
 genfstab -U /mnt >> /mnt/etc/fstab
-
+echo -e "\nUsing sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode"
 # With sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode
 sed '1,/^#chrootpart$/d' archinstaller/archinstall.sh > /mnt/archinstallpart2.sh
 chmod +x /mnt/archinstallpart2.sh
