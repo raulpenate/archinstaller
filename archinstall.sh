@@ -254,4 +254,10 @@ git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 # Installing package with yay
 yay -Syy
 yay -S cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh lightdm-webkit-theme-aether \
-    nerd-fonts-roboto-mono
+    nerd-fonts-roboto-mono p7zip-gui networkmanager-dmenu-git
+# Polybar Themes
+git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
+cd polybar-themes
+chmod +x setup.sh
+./setup.sh
+
