@@ -80,7 +80,7 @@ if [ "$CONFIRMATION" = "y" ]; then
         mkdir /mnt/boot/efi
         mount /dev/$bootpartition /mnt/boot/efi
     fi
-    # EFI or bios partition
+        # EFI or bios partition
     read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
@@ -91,15 +91,14 @@ if [ "$CONFIRMATION" = "y" ]; then
         mkswap /dev/$swappartition
         swapon /dev/$swappartition
     fi
+    # arch partition
+    lsblk
+    echo -e "$NC\n---------------------------------------------------------------------------------"
+    read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
+    # Formating and mounting the partition
+    mkfs.ext4 /dev/$ospartition
+    mount /dev/$ospartition /mnt
 fi
-
-# arch partition
-lsblk
-echo -e "$NC\n---------------------------------------------------------------------------------"
-read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
-# Formating and mounting the partition
-mkfs.ext4 /dev/$ospartition
-mount /dev/$ospartition /mnt
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
 echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
@@ -114,6 +113,7 @@ chmod +x /mnt/archinstallpart2.sh
 
 # Changing to chroot
 arch-chroot /mnt ./archinstallpart2.sh
+exit
 
 #chrootpart
 #```````````````----------------------------------------------------------------------```````````````
