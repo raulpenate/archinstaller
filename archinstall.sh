@@ -62,7 +62,6 @@ if [ "$CONFIRMATION" = "y" ]; then
     umount -R /mnt
     umount -R /mnt/boot
     rm -rf /mnt/boot
-    rm -rf /mnt/efi 
     # Partitioning the disks
     cfdisk 
     # EFI or bios partition
@@ -78,7 +77,8 @@ if [ "$CONFIRMATION" = "y" ]; then
         # Formating and mounting the partition
         mkfs.fat -F32 /dev/$bootpartition
         mkdir /mnt/boot
-        mount /dev/$bootpartition /mnt/boot
+        mkdir /mnt/boot/efi
+        mount /dev/$bootpartition /mnt/boot/efi
     fi
     # EFI or bios partition
     read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
@@ -217,7 +217,7 @@ echo -e "\n--------------------------------------"
 echo -e "Verifing if is EFI or not..."
 if [ -d /sys/firmware/efi ]; then
     echo -e "Installing GRUB in UEFI\n"
-    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
+    grub-install --target=x86_64-efi --efi-directory=boot/efi --bootloader-id=grub
 else
     echo -e "Installing GRUB in BIOS\n"
     grub-install --recheck /dev/sda
