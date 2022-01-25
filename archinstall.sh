@@ -1,5 +1,12 @@
 #!/bin/bash
-# SCRIPT MADE BY raulpenate
+###################################################################
+#                   SCRIPT MADE BY raulpenate                     #
+#                                                                 #
+#    if you want to connect using your WIFI in arch use:          #
+#    iwctl --passphrase passphrase station device connect SSID    #
+#                                                                 #
+#    check iwctl arch wiki to check more things about using wifi  #
+###################################################################
 printf "\033c"
 # colors
 NC='\033[0m' # No Color
@@ -35,13 +42,13 @@ $BICyan
  ░           ░       ░                 ░  ░    ░  ░    ░  ░   ░  ░   ░     
                                                                                 
 $BIWhite
-    Do me a favor and listen the wrecks and the regrettes.                                                                    
+    Do me a favor and listen Salem(Destroy me), The Wrecks and The Regrettes.                                                                    
 "
 
 if [ -d /sys/firmware/efi ]; then
     echo -e "\nYour device is$BIYellow EFI$BIWhite, if you create a bootloader use $BIYellow\"EFI System\"$BIWhite and use a $BIYellow\"GPT\"$BIWhite partition$UYellow\n"
 else
-    echo -e "\nYour device is$BIYellow BIOS$BIWhite, if you create a bootloader use $BIYellow\"BIOS boot\"$BIWhite and use a $BIYellow\"DOS or MBR\"$BIWhite partition$UYellow\n"
+    echo -e "\nYour device is$BIYellow BIOS$BIWhite, if you create a bootloader use $BIYellow\"BIOS boot\"$BIWhite and use a $BIYellow\"DOS or MBR\"$BIWhite partition$UYellow\n$NC"
 fi
 
 read -p "--> This is a personal script, use it by your own risk, press ENTER to continue... <--"
@@ -53,19 +60,27 @@ read -p "--> This is a personal script, use it by your own risk, press ENTER to 
 
 #Adding more paralleldownloads
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
+
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
+
 #Disk formating and mounting
 read -p "Do you want to format and partition your disk? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
-    #umounting if the script was runned already
-    umount -R /mnt
-    umount -R /mnt/boot
-    rm -rf /mnt/boot
+
     # Partitioning the disks
     cfdisk 
-    # EFI or bios partition
     printf "\033c"
+
+    # arch partition
+    lsblk
+    echo -e "$NC\n---------------------------------------------------------------------------------"
+    read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
+    # Formating and mounting the partition
+    mkfs.ext4 /dev/$ospartition
+    mount /dev/$ospartition /mnt
+
+    # EFI or bios partition
     echo -e "\n---------------------------------------------------------------------------------"
     read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
@@ -75,12 +90,12 @@ if [ "$CONFIRMATION" = "y" ]; then
         read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
         echo -e "\n---------------------------------------------------------------------------------"
         # Formating and mounting the partition
-        mkfs.fat -F32 /dev/$bootpartition
+        mkfs.fat -F 32 /dev/$bootpartition
         mkdir /mnt/boot
-        mkdir /mnt/boot/efi
-        mount /dev/$bootpartition /mnt/boot/efi
+        mount /dev/$bootpartition /mnt/boot
     fi
-        # EFI or bios partition
+
+    # EFI or bios partition
     read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
@@ -91,13 +106,7 @@ if [ "$CONFIRMATION" = "y" ]; then
         mkswap /dev/$swappartition
         swapon /dev/$swappartition
     fi
-    # arch partition
-    lsblk
-    echo -e "$NC\n---------------------------------------------------------------------------------"
-    read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
-    # Formating and mounting the partition
-    mkfs.ext4 /dev/$ospartition
-    mount /dev/$ospartition /mnt
+
 fi
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
@@ -106,8 +115,9 @@ pacstrap /mnt base linux linux-firmware vim sed
 
 # Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
 genfstab -U /mnt >> /mnt/etc/fstab
-echo -e "\nUsing sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode"
+
 # With sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode
+echo -e "\nUsing sed, cutting this script until #chrootpart to execute it later from /mnt in chroot mode"
 sed '1,/^#chrootpart$/d' archinstaller/archinstall.sh > /mnt/archinstallpart2.sh
 chmod +x /mnt/archinstallpart2.sh
 
@@ -146,6 +156,7 @@ echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 # setting COLEMAK as a main layout
 echo -e "KEYMAP=colemak" >> /etc/vconsole.conf
+
 # creatinzathurag hostname
 printf "\033c"
 echo -e "----------------------------------------------------------"
@@ -184,7 +195,7 @@ pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
 pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
 ## Software of my preference
 pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
-    picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance \
+    picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance neofetch \
     zathura zathura-pdf-mupdf ffmpeg imagemagick \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
     arandr thunar htop bashtop stow \
@@ -195,37 +206,43 @@ systemctl enable lightdm
 echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
 echo "user-session=i3" >> /etc/lightdm/lightdm.conf
 echo "exec \"setxkbmap us -variant colemak\"" >> /etc/i3/config
-echo "display-setup-scrip=setxkbmap us -variant colemak" >> /etc/lightdm/lightdm.conf``
+echo "display-setup-scrip=setxkbmap us -variant colemak" >> /etc/lightdm/lightdm.conf
 localectl set-keymap colemak
 
 # Create your root password
 echo -e "\n-------------------------------------------------"
 echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
 passwd
+
 # Create your user
 echo -e "\n---------------------------------------------------------------"
 echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
 read -p "--> " CREATEDUSERNAME
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
 useradd -mG wheel $CREATEDUSERNAME
+
 # Create a password for your user
 echo -e "\n--------------------------------------"
 echo -e "Insert the PASSWORD of $CREATEDUSERNAME"
+echo -e "Insert the PASSWORD of $CREATEDUSERNAME"
 passwd $CREATEDUSERNAME
+
 # Verifying if is EFI or not to install GRUB
 echo -e "\n--------------------------------------"
 echo -e "Verifing if is EFI or not..."
 if [ -d /sys/firmware/efi ]; then
     echo -e "Installing GRUB in UEFI\n"
-    grub-install --target=x86_64-efi --efi-directory=boot/efi --bootloader-id=grub
+    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 else
     echo -e "Installing GRUB in BIOS\n"
     grub-install --recheck /dev/sda
 fi
+
 # Verifying if OSPROBER is allowed
 if [ -z $(grep -i "\nGRUB\_DISABLE\_OS\_PROBER=false" /etc/default/grub) ]; then
     echo -e "GRUB_DISABLE_OS_PROBER=false" >> /etc/default/grub
 fi
+
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -247,6 +264,7 @@ exit
 #```````````````----------------------------- DOTFILES -------------------------------``````````````` 
 #```````````````----------------------------------------------------------------------```````````````
 
+# Setting my keyboard again as a colemak
 setxkbmap -layout us colemak
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
