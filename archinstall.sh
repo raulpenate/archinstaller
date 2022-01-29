@@ -85,6 +85,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
+
         lsblk
         echo -e "\n---------------------------------------------------------------------------------"
         read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
@@ -185,6 +186,8 @@ pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
 pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
 ## Login + Greeter
 pacman -S --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
+## Gnome
+pacman -S --noconfirm gnome
 ## Fonts
 pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
 ## Grub stuff
@@ -198,15 +201,11 @@ pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc pa
     picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance neofetch \
     zathura zathura-pdf-mupdf ffmpeg imagemagick \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
-    arandr thunar htop bashtop stow \
+    arandr thunar htop bashtop stow rsync\
 
 # Enabling software
 systemctl enable NetworkManager
 systemctl enable lightdm
-echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
-echo "user-session=i3" >> /etc/lightdm/lightdm.conf
-echo "exec \"setxkbmap us -variant colemak\"" >> /etc/i3/config
-echo "display-setup-scrip=setxkbmap us -variant colemak" >> /etc/lightdm/lightdm.conf
 localectl set-keymap colemak
 
 # Create your root password
@@ -218,8 +217,8 @@ passwd
 echo -e "\n---------------------------------------------------------------"
 echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
 read -p "--> " CREATEDUSERNAME
-echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers
-useradd -mG wheel $CREATEDUSERNAME
+echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+useradd -mG wheel -s /bin/zsh $CREATEDUSERNAME
 
 # Create a password for your user
 echo -e "\n--------------------------------------"
@@ -246,11 +245,15 @@ fi
 # Installing grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-# With sed, cutting this script until userpartchrootpart to execute it later from /mnt in chroot mode
+# With sed, cutting this script until userpartchrootpart to execute it in the user
 USERPATH=/home/$CREATEDUSERNAME/archinstallpart3.sh
 sed '1,/^#userpart$/d' archinstallpart2.sh > $USERPATH
 chown $CREATEDUSERNAME:$CREATEDUSERNAME $USERPATH
 chmod +x $USERPATH
+su -c $USERPATH -s /bin/sh $CREATEDUSERNAME
+
+# Putting sudo with password again, simple replace
+sed -i 's/%wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) ALL/g' /etc/sudoers
 
 # Instructions
 echo -e "\n----------------------------------------------------------------"
@@ -266,16 +269,22 @@ exit
 
 # Setting my keyboard again as a colemak
 setxkbmap -layout us colemak
+# Setting lightdm
+echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
+echo "user-session=i3" >> /etc/lightdm/lightdm.conf
+echo "exec \"setxkbmap us -variant colemak\"" >> /etc/i3/config
+echo "display-setup-scrip=setxkbmap us -variant colemak" >> /etc/lightdm/lightdm.conf
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 # Software needed for dotfiles:
 # Installing package with yay
 yay -Syy
 yay -S cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh lightdm-webkit-theme-aether \
-    nerd-fonts-roboto-mono p7zip-gui networkmanager-dmenu-git
+    nerd-fonts-roboto-mono p7zip-gui networkmanager-dmenu-git github-cli
 # Polybar Themes
 git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
 cd polybar-themes
 chmod +x setup.sh
 ./setup.sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
