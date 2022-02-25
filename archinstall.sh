@@ -202,10 +202,14 @@ pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc pa
     zathura zathura-pdf-mupdf ffmpeg imagemagick \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
     arandr thunar htop bashtop stow rsync\
+## Gnome
+sudo pacman -S gnome gdm
 
 # Enabling software
 systemctl enable NetworkManager
 systemctl enable lightdm
+systemctl enable gdm.service
+systemctl start gdm.service
 localectl set-keymap colemak
 
 # Create your root password
