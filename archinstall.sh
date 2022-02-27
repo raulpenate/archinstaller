@@ -184,10 +184,8 @@ pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl ma
 pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
 ## Window manager
 pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
-## Login + Greeter
-pacman -S --noconfirm lightdm lightdm-webkit2-greeter lightdm-gtk-greeter-settings
 ## Gnome
-pacman -S --noconfirm gnome
+pacman -S --noconfirm gnome gdm
 ## Fonts
 pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
 ## Grub stuff
@@ -195,19 +193,16 @@ pacman -S --noconfirm grub efibootmgr os-prober
 ## bluetooth
 pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
 ## Wifi
-pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
+pacman -S --noconfirm networkmanager network-manager-aplet wireless_tools wpa_supplicant
 ## Software of my preference
 pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
     picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance neofetch \
     zathura zathura-pdf-mupdf ffmpeg imagemagick \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
     arandr thunar htop bashtop stow rsync\
-## Gnome
-sudo pacman -S gnome gdm
 
 # Enabling software
 systemctl enable NetworkManager
-systemctl enable lightdm
 systemctl enable gdm.service
 systemctl start gdm.service
 localectl set-keymap colemak
@@ -273,17 +268,13 @@ exit
 
 # Setting my keyboard again as a colemak
 setxkbmap -layout us colemak
-# Setting lightdm
-echo "greeter-session=lightdm-webkit2-greeter" >> /etc/lightdm/lightdm.conf
-echo "user-session=i3" >> /etc/lightdm/lightdm.conf
 echo "exec \"setxkbmap us -variant colemak\"" >> /etc/i3/config
-echo "display-setup-scrip=setxkbmap us -variant colemak" >> /etc/lightdm/lightdm.conf
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 # Software needed for dotfiles:
 # Installing package with yay
 yay -Syy
-yay -S cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh lightdm-webkit-theme-aether \
+yay -S cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh \
     nerd-fonts-roboto-mono p7zip-gui networkmanager-dmenu-git github-cli
 # Polybar Themes
 git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
