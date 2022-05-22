@@ -193,7 +193,7 @@ pacman -S --noconfirm grub efibootmgr os-prober
 ## bluetooth
 pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
 ## Wifi
-pacman -S --noconfirm networkmanager network-manager-aplet wireless_tools wpa_supplicant
+pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
 ## Software of my preference
 pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
     picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance neofetch \
