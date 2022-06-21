@@ -74,11 +74,36 @@ if [ "$CONFIRMATION" = "y" ]; then
 
     # Arch partition
     lsblk
-    echo -e "$NC\n---------------------------------------------------------------------------------"
-    read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
-    # Formating and mounting the partition
-    mkfs.ext4 /dev/$ospartition
-    mount /dev/$ospartition /mnt
+    while true; do
+        # Loop to display disks
+        echo -e "Choose one option: "
+        for item in "${ArrStoragePath[@]}"
+        do
+            ((CounterArray++))
+            echo -e " $CounterArray) $item"
+        done
+        echo -e "\n------------------------------------------------"
+        read -p "Select the /dev/drive where ARCH will be used -> " ospartition
+        echo -e "\n------------------------------------------------"
+        ((ospartition--))
+        # If option extist keep going, if not repeat
+        if [ -n "${ArrStoragePath[$ospartition]}" ]; then
+            # Formating and mounting the partition
+            mkfs.ext4 /dev/${ArrStoragePath[$ospartition]}
+            mount /dev/${ArrStoragePath[$ospartition]} /mnt
+            # Delete item after selected
+            unset ArrStoragePath[$ospartition]
+            ArrStoragePath=( "${ArrStoragePath[@]}" )
+            # Restart counter
+            unset CounterArray
+        else
+            printf "\033c"
+            echo -e "\n ----------------------------------- "
+            echo -e "| Please select an available option |"
+            echo -e " ----------------------------------- \n"
+            unset CounterArray
+        fi
+    done
 
     # EFI or bios partition
     echo -e "\n---------------------------------------------------------------------------------"
@@ -87,14 +112,37 @@ if [ "$CONFIRMATION" = "y" ]; then
     if [ "$CONFIRMATION" = "y" ]; then
 
         lsblk
-        echo -e "\n---------------------------------------------------------------------------------"
-        read -p "Enter the /dev/drive where the BOOTLOADER will be used (Ex: sda1): " bootpartition
-        echo -e "\n---------------------------------------------------------------------------------"
-        # Formating and mounting the partition
-        mkfs.fat -F 32 /dev/$bootpartition
-        mkdir /mnt/boot
-        mount /dev/$bootpartition /mnt/boot
-        
+        while true; do
+            # Loop to display disks
+            echo -e "Choose one option: "
+            for item in "${ArrStoragePath[@]}"
+            do
+                ((CounterArray++))
+                echo -e " $CounterArray) $item"
+            done
+            echo -e "\n------------------------------------------------------------------------------"
+            read -p "Select the /dev/drive where the BOOTLOADER will be used -> " bootpartition
+            echo -e "\n------------------------------------------------------------------------------"
+            ((bootpartition--))
+            # If option extist keep going, if not repeat
+            if [ -n "${ArrStoragePath[$bootpartition]}" ]; then
+                # Formating and mounting the partition
+                mkfs.fat -F 32 /dev/${ArrStoragePath[$bootpartition]}
+                mkdir /mnt/boot
+                mount /dev/${ArrStoragePath[$bootpartition]} /mnt/boot
+                # Delete item after selected
+                unset ArrStoragePath[$bootpartition]
+                ArrStoragePath=( "${ArrStoragePath[@]}" )
+                # Restart counter
+                unset CounterArray
+            else
+                printf "\033c"
+                echo -e "\n ----------------------------------- "
+                echo -e "| Please select an available option |"
+                echo -e " ----------------------------------- \n"
+                unset CounterArray
+            fi
+        done
     fi
 
     # EFI or bios partition
@@ -103,12 +151,40 @@ if [ "$CONFIRMATION" = "y" ]; then
     if [ "$CONFIRMATION" = "y" ]; then
 
         lsblk
-        echo -e "\n---------------------------------------------------------------------------------"
-        read -p "Enter the /dev/drive where the SWAP will be used (Ex: sda2): " swappartition
-        # Formating and mounting the partition
-        mkswap /dev/$swappartition
-        swapon /dev/$swappartition
-
+        while true; do
+            # Loop to display disks
+            echo -e "Choose one option: "
+            for item in "${ArrStoragePath[@]}"
+            do
+                ((CounterArray++))
+                echo -e " $CounterArray) $item"
+            done
+            echo -e "\n------------------------------------------------------------------------------"
+            read -p "Select the /dev/drive where the SWAP will be used -> " swappartition
+            echo -e "\n------------------------------------------------------------------------------"
+            ((swappartition--))
+            # If option extist keep going, if not repeat
+            if [ -n "${ArrStoragePath[$swappartition]}" ]; then
+                # Formating and mounting the partition
+                mkfs.fat -F 32 /dev/${ArrStoragePath[$swappartition]}
+                mkdir /mnt/boot
+                mount /dev/${ArrStoragePath[$swappartition]} /mnt/boot
+                # Formating and mounting the partition
+                mkswap /dev/${ArrStoragePath[$swappartition]}
+                swapon /dev/${ArrStoragePath[$swappartition]}
+                # Delete item after selected
+                unset ArrStoragePath[$swappartition]
+                ArrStoragePath=( "${ArrStoragePath[@]}" )
+                # Restart counter
+                unset CounterArray
+            else
+                printf "\033c"
+                echo -e "\n ----------------------------------- "
+                echo -e "| Please select an available option |"
+                echo -e " ----------------------------------- \n"
+                unset CounterArray
+            fi
+        done
     fi
 
 fi
