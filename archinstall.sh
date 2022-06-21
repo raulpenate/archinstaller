@@ -77,6 +77,7 @@ if [ "$CONFIRMATION" = "y" ]; then
 
     # Arch partition
     lsblk
+    echo -e "\n----------------------------------------------\n"
     while true; do
         # Loop to display disks
         echo -e "Choose one option: "
@@ -85,9 +86,9 @@ if [ "$CONFIRMATION" = "y" ]; then
             ((CounterArray++))
             echo -e " $CounterArray) $item"
         done
-        echo -e "\n------------------------------------------------"
-        read -p "Select the /dev/drive where ARCH will be used -> " ospartition
-        echo -e "\n------------------------------------------------"
+        echo -e "\n-------------------------------------------------"
+        read -p "Select the /dev/drive (number) where ARCH will be used ->  " ospartition
+        echo -e "\n-------------------------------------------------"
         ((ospartition--))
         # If option extist keep going, if not repeat
         if [ -n "${ArrStoragePath[$ospartition]}" ]; then
@@ -99,6 +100,7 @@ if [ "$CONFIRMATION" = "y" ]; then
             ArrStoragePath=( "${ArrStoragePath[@]}" )
             # Restart counter
             unset CounterArray
+            break
         else
             printf "\033c"
             echo -e "\n ----------------------------------- "
@@ -115,6 +117,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     if [ "$CONFIRMATION" = "y" ]; then
 
         lsblk
+        echo -e "\n----------------------------------------------\n"
         while true; do
             # Loop to display disks
             echo -e "Choose one option: "
@@ -124,7 +127,7 @@ if [ "$CONFIRMATION" = "y" ]; then
                 echo -e " $CounterArray) $item"
             done
             echo -e "\n------------------------------------------------------------------------------"
-            read -p "Select the /dev/drive where the BOOTLOADER will be used -> " bootpartition
+            read -p "Select the /dev/drive (number) where the BOOTLOADER will be used -> " bootpartition
             echo -e "\n------------------------------------------------------------------------------"
             ((bootpartition--))
             # If option extist keep going, if not repeat
@@ -138,6 +141,7 @@ if [ "$CONFIRMATION" = "y" ]; then
                 ArrStoragePath=( "${ArrStoragePath[@]}" )
                 # Restart counter
                 unset CounterArray
+                break
             else
                 printf "\033c"
                 echo -e "\n ----------------------------------- "
@@ -154,6 +158,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     if [ "$CONFIRMATION" = "y" ]; then
 
         lsblk
+        echo -e "\n----------------------------------------------\n"
         while true; do
             # Loop to display disks
             echo -e "Choose one option: "
@@ -163,7 +168,7 @@ if [ "$CONFIRMATION" = "y" ]; then
                 echo -e " $CounterArray) $item"
             done
             echo -e "\n------------------------------------------------------------------------------"
-            read -p "Select the /dev/drive where the SWAP will be used -> " swappartition
+            read -p "Select the /dev/drive (number) where the SWAP will be used -> " swappartition
             echo -e "\n------------------------------------------------------------------------------"
             ((swappartition--))
             # If option extist keep going, if not repeat
@@ -180,6 +185,7 @@ if [ "$CONFIRMATION" = "y" ]; then
                 ArrStoragePath=( "${ArrStoragePath[@]}" )
                 # Restart counter
                 unset CounterArray
+                break
             else
                 printf "\033c"
                 echo -e "\n ----------------------------------- "
