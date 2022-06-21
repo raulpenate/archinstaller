@@ -73,7 +73,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     printf "\033c"
 
     # To find all disk available
-    ArrStoragePath=( $(lsblk -nd --output NAME) )
+    ArrStoragePath=( $(lsblk -np --output KNAME) )
 
     # Arch partition
     lsblk
@@ -92,8 +92,8 @@ if [ "$CONFIRMATION" = "y" ]; then
         # If option extist keep going, if not repeat
         if [ -n "${ArrStoragePath[$ospartition]}" ]; then
             # Formating and mounting the partition
-            mkfs.ext4 /dev/${ArrStoragePath[$ospartition]}
-            mount /dev/${ArrStoragePath[$ospartition]} /mnt
+            mkfs.ext4 ${ArrStoragePath[$ospartition]}
+            mount ${ArrStoragePath[$ospartition]} /mnt
             # Delete item after selected
             unset ArrStoragePath[$ospartition]
             ArrStoragePath=( "${ArrStoragePath[@]}" )
@@ -130,9 +130,9 @@ if [ "$CONFIRMATION" = "y" ]; then
             # If option extist keep going, if not repeat
             if [ -n "${ArrStoragePath[$bootpartition]}" ]; then
                 # Formating and mounting the partition
-                mkfs.fat -F 32 /dev/${ArrStoragePath[$bootpartition]}
+                mkfs.fat -F 32 ${ArrStoragePath[$bootpartition]}
                 mkdir /mnt/boot
-                mount /dev/${ArrStoragePath[$bootpartition]} /mnt/boot
+                mount ${ArrStoragePath[$bootpartition]} /mnt/boot
                 # Delete item after selected
                 unset ArrStoragePath[$bootpartition]
                 ArrStoragePath=( "${ArrStoragePath[@]}" )
@@ -169,12 +169,12 @@ if [ "$CONFIRMATION" = "y" ]; then
             # If option extist keep going, if not repeat
             if [ -n "${ArrStoragePath[$swappartition]}" ]; then
                 # Formating and mounting the partition
-                mkfs.fat -F 32 /dev/${ArrStoragePath[$swappartition]}
+                mkfs.fat -F 32 ${ArrStoragePath[$swappartition]}
                 mkdir /mnt/boot
-                mount /dev/${ArrStoragePath[$swappartition]} /mnt/boot
+                mount ${ArrStoragePath[$swappartition]} /mnt/boot
                 # Formating and mounting the partition
-                mkswap /dev/${ArrStoragePath[$swappartition]}
-                swapon /dev/${ArrStoragePath[$swappartition]}
+                mkswap ${ArrStoragePath[$swappartition]}
+                swapon ${ArrStoragePath[$swappartition]}
                 # Delete item after selected
                 unset ArrStoragePath[$swappartition]
                 ArrStoragePath=( "${ArrStoragePath[@]}" )
