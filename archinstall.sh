@@ -72,6 +72,9 @@ if [ "$CONFIRMATION" = "y" ]; then
     cfdisk 
     printf "\033c"
 
+    # To find all disk available
+    ArrStoragePath=( $(lsblk -nd --output NAME) )
+
     # Arch partition
     lsblk
     while true; do
