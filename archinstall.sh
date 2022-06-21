@@ -17,7 +17,7 @@ BIWhite='\033[1;97m'      # White
 # Underline
 UYellow='\033[4;33m'      # Yellow
 
-# prentation and warning message
+# Presentation and warning message
 echo -e "
 $BIWhite SCRIPT MADE BY$BIYellow RAULPENATE$BIWhite:
 $BICyan
@@ -58,13 +58,13 @@ read -p "--> This is a personal script, use it by your own risk, press ENTER to 
 #```````````````----------------------- Installing Arch and basics -------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
 
-#Adding more paralleldownloads
+# Adding more paralleldownloads
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
 
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
 
-#Disk formating and mounting
+# Disk formating and mounting
 read -p "Do you want to format and partition your disk? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
 
@@ -72,7 +72,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     cfdisk 
     printf "\033c"
 
-    # arch partition
+    # Arch partition
     lsblk
     echo -e "$NC\n---------------------------------------------------------------------------------"
     read -p "Enter the /dev/drive where ARCH will be used (Ex: sda3): " ospartition
@@ -94,18 +94,21 @@ if [ "$CONFIRMATION" = "y" ]; then
         mkfs.fat -F 32 /dev/$bootpartition
         mkdir /mnt/boot
         mount /dev/$bootpartition /mnt/boot
+        
     fi
 
     # EFI or bios partition
     read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
+
         lsblk
         echo -e "\n---------------------------------------------------------------------------------"
         read -p "Enter the /dev/drive where the SWAP will be used (Ex: sda2): " swappartition
         # Formating and mounting the partition
         mkswap /dev/$swappartition
         swapon /dev/$swappartition
+
     fi
 
 fi
@@ -274,12 +277,11 @@ git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 # Software needed for dotfiles:
 # Installing package with yay
 yay -Syy
-yay -S cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh \
-    nerd-fonts-roboto-mono p7zip-gui networkmanager-dmenu-git github-cli
+yay -S cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh visual-studio-code-bin \
+    nerd-fonts-roboto-mono p7zip-gui networkmanager-dmenu-git github-cli google-chrome
 # Polybar Themes
 git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
 cd polybar-themes
 chmod +x setup.sh
 ./setup.sh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-
