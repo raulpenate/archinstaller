@@ -116,6 +116,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
 
+        printf "\033c"
         lsblk
         echo -e "\n----------------------------------------------\n"
         while true; do
@@ -157,6 +158,7 @@ if [ "$CONFIRMATION" = "y" ]; then
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
 
+        printf "\033c"
         lsblk
         echo -e "\n----------------------------------------------\n"
         while true; do
@@ -279,7 +281,7 @@ pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-m
 ## Grub stuff
 pacman -S --noconfirm grub efibootmgr os-prober
 ## bluetooth
-pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth
+pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth pavucontrol
 ## Wifi
 pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
 ## Software of my preference
@@ -349,7 +351,7 @@ echo -e "------------------------------------------------------------------\n"
 exit
 
 #userpart
-#```````````````----------------------------------------------------------------------```````````````
+#```````````````-----------------------z-----------------------------------------------```````````````
 #```````````````------------------------------ PART 3 --------------------------------```````````````
 #```````````````----------------------------- DOTFILES -------------------------------``````````````` 
 #```````````````----------------------------------------------------------------------```````````````
