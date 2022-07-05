@@ -42,7 +42,7 @@ $BICyan
  ░           ░       ░                 ░  ░    ░  ░    ░  ░   ░  ░   ░     
                                                                                 
 $BIWhite
-    Do me a favor and listen Salem(Destroy me), The Wrecks and The Regrettes.                                                                    
+    Do me a favor and listen The Wrecks and KennyHoppla.                                                                    
 "
 
 if [ -d /sys/firmware/efi ]; then
@@ -58,8 +58,35 @@ read -p "--> This is a personal script, use it by your own risk, press ENTER to 
 #```````````````----------------------- Installing Arch and basics -------------------```````````````
 #```````````````----------------------------------------------------------------------```````````````
 
+# Pick a keyboard layout
+while true; do
+    #Array of options
+    declare -a ArrLayout=("qwerty" "colemak" "dvorak")
+    #Looping the array 
+    for item in "${ArrLayout[@]}"
+    do
+        ((CounterArray++));
+        echo -e " $CounterArray) $item"
+    done
+    #Reading the selected option
+    read -p "Select the keyboard layout --> " LayoutOption
+    ((LayoutOption--));
+    #If option extist keep going, if not repeat
+    if [[ "${ArrLayout[$LayoutOption]}" == qwerty ]]; then
+        echo "us"
+        break
+    if [ -n "${ArrLayout[$LayoutOption]}" ]; then
+        sed -i 's/KEYBOARDLAYOUT/${ArrLayout[$LayoutOption]}' archinstaller/archinstall.sh
+        break
+    else
+        echo -e "Please select an available option"
+        #Restart counter
+        unset CounterArray
+    fi
+done
+
 # Adding more paralleldownloads
-sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
+sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 8/" /etc/pacman.conf
 
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
@@ -86,9 +113,7 @@ if [ "$CONFIRMATION" = "y" ]; then
             ((CounterArray++))
             echo -e " $CounterArray) $item"
         done
-        echo -e "\n-------------------------------------------------"
         read -p "Select the /dev/drive (number) where ARCH will be used ->  " ospartition
-        echo -e "\n-------------------------------------------------"
         ((ospartition--))
         # If option extist keep going, if not repeat
         if [ -n "${ArrStoragePath[$ospartition]}" ]; then
@@ -127,9 +152,7 @@ if [ "$CONFIRMATION" = "y" ]; then
                 ((CounterArray++))
                 echo -e " $CounterArray) $item"
             done
-            echo -e "\n------------------------------------------------------------------------------"
             read -p "Select the /dev/drive (number) where the BOOTLOADER will be used -> " bootpartition
-            echo -e "\n------------------------------------------------------------------------------"
             ((bootpartition--))
             # If option extist keep going, if not repeat
             if [ -n "${ArrStoragePath[$bootpartition]}" ]; then
@@ -245,8 +268,8 @@ echo -e "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
-# setting COLEMAK as a main layout
-echo -e "KEYMAP=colemak" >> /etc/vconsole.conf
+# setting KEYBOARDLAYOUT as a main layout
+echo -e "KEYMAP=KEYBOARDLAYOUT" >> /etc/vconsole.conf
 
 # creatinzathurag hostname
 printf "\033c"
@@ -295,7 +318,7 @@ pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc pa
 systemctl enable NetworkManager
 systemctl enable gdm.service
 systemctl start gdm.service
-localectl set-keymap colemak
+localectl set-keymap KEYBOARDLAYOUT
 
 # Create your root password
 echo -e "\n-------------------------------------------------"
@@ -351,14 +374,14 @@ echo -e "------------------------------------------------------------------\n"
 exit
 
 #userpart
-#```````````````-----------------------z-----------------------------------------------```````````````
+#```````````````----------------------------------------------------------------------```````````````
 #```````````````------------------------------ PART 3 --------------------------------```````````````
 #```````````````----------------------------- DOTFILES -------------------------------``````````````` 
 #```````````````----------------------------------------------------------------------```````````````
 
-# Setting my keyboard again as a colemak
-setxkbmap -layout us colemak
-echo "exec \"setxkbmap us -variant colemak\"" >> /etc/i3/config
+# Setting my keyboard again as a KEYBOARDLAYOUT
+setxkbmap -layout us KEYBOARDLAYOUT
+echo "exec \"setxkbmap us -variant KEYBOARDLAYOUT\"" >> /etc/i3/config
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 # Software needed for dotfiles:
