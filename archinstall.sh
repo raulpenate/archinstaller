@@ -62,7 +62,7 @@ read -p "--> This is a personal script, use it by your own risk, press ENTER to 
 while true; do
     #Array of options
     declare -a ArrLayout=("qwerty" "colemak" "dvorak")
-    echo -e 
+    echo -e "\n"
     #Looping the array 
     for item in "${ArrLayout[@]}"
     do
@@ -99,6 +99,7 @@ sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 8/" /etc/pacman.conf
 timedatectl set-ntp true
 
 # Disk formating and mounting
+echo -e "\n"
 read -p "Do you want to format and partition your disk? (y/n): " CONFIRMATION
 if [ "$CONFIRMATION" = "y" ]; then
 
@@ -253,6 +254,8 @@ exit
 #```````````````----------------------------------------------------------------------```````````````
 
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 6/" /etc/pacman.conf
+sed -i "s/^#[multilib]$/[multilib]/" /etc/pacman.conf
+sed -i "s/^#Include = /etc/pacman.d/mirrorlist$/Include = /etc/pacman.d/mirrorlist/" /etc/pacman.conf
 # Use timedatectl to ensure the system clock is accurate:
 echo -e "Using timedatectl to ensure the system clock is accurate"
 timedatectl set-ntp true
@@ -325,7 +328,7 @@ pacman -S --noconfirm tilix alacritty kitty firefox simplescreenrecorder obs-stu
 systemctl enable NetworkManager
 systemctl enable gdm.service
 systemctl start gdm.service
-localectl set-keymap us colemak KEYBOARDLAYOUT
+localectl set-keymap us pc105 KEYBOARDLAYOUT
 
 # Create your root password
 while true; do
@@ -402,7 +405,7 @@ exit
 #```````````````----------------------------------------------------------------------```````````````
 
 # Setting my keyboard again as a KEYBOARDLAYOUT
-localectl set-keymap us KEYBOARDLAYOUT
+localectl set-keymap us pc105 KEYBOARDLAYOUT
 
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
@@ -416,7 +419,7 @@ cd polybar-themes
 chmod +x setup.sh
 ./setup.sh
 
-# Oh my ZSH
+# OH-MY-ZSH
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # Starship
