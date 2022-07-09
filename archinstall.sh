@@ -305,10 +305,12 @@ pacman -Syy
 pacman -S --noconfirm mtools dosfstools base-devel linux-headers openssh curl man-db
 ## Windows system display
 pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
-## Window manager
+## i3 Window manager
 pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
 ## Gnome
 pacman -S --noconfirm gnome gdm
+# Plasma
+pacman -S --noconfirm xorg plasma kde-applications
 ## Fonts
 pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
 ## Grub stuff
@@ -328,7 +330,7 @@ pacman -S --noconfirm tilix alacritty kitty firefox simplescreenrecorder obs-stu
 systemctl enable NetworkManager
 systemctl enable gdm.service
 systemctl start gdm.service
-localectl set-keymap us pc105 KEYBOARDLAYOUT
+localectl set-x11-keymap us pc105 KEYBOARDLAYOUT
 
 # Create your root password
 while true; do
@@ -405,7 +407,7 @@ exit
 #```````````````----------------------------------------------------------------------```````````````
 
 # Setting my keyboard again as a KEYBOARDLAYOUT
-localectl set-keymap us pc105 KEYBOARDLAYOUT
+localectl set-x11-keymap us pc105 KEYBOARDLAYOUT
 
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
