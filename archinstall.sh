@@ -408,6 +408,7 @@ exit
 
 # Setting my keyboard again as a KEYBOARDLAYOUT
 localectl set-x11-keymap us pc105 KEYBOARDLAYOUT
+setxkbmap -layout KEYBOARDLAYOUT
 
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
