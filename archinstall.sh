@@ -402,7 +402,7 @@ exit
 #```````````````----------------------------------------------------------------------```````````````
 
 # Setting my keyboard again as a KEYBOARDLAYOUT
-localectl set-keymap us colemak KEYBOARDLAYOUT
+localectl set-keymap us KEYBOARDLAYOUT
 
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
@@ -415,7 +415,12 @@ git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
 cd polybar-themes
 chmod +x setup.sh
 ./setup.sh
+
+# Oh my ZSH
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+# Starship
+curl -sS https://starship.rs/install.sh | sh
 
 # Cloning repo
 git clone --separate-git-dir=$HOME/.dotfiles https://github.com/raulpenate/.dotfiles.git tmpdotfiles
