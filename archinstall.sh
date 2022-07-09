@@ -62,7 +62,7 @@ read -p "--> This is a personal script, use it by your own risk, press ENTER to 
 while true; do
     #Array of options
     declare -a ArrLayout=("qwerty" "colemak" "dvorak")
-    echo -e "\n"
+    echo -e 
     #Looping the array 
     for item in "${ArrLayout[@]}"
     do
@@ -71,7 +71,7 @@ while true; do
     done
     #Reading the selected option
     
-    read -p "$BIYellow:: Select the keyboard layout -->$BIWhite " LayoutOption
+    read -p ":: Select the keyboard layout --> " LayoutOption
     ((LayoutOption--));
     #If option extist keep going, if not repeat
     if [[ "${ArrLayout[$LayoutOption]}" == qwerty ]]; then
@@ -89,8 +89,8 @@ while true; do
         #Restart counter
         unset CounterArray
     fi
-    unset CounterArray
 done
+unset CounterArray
 
 # Adding more paralleldownloads
 sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 8/" /etc/pacman.conf
@@ -137,9 +137,10 @@ if [ "$CONFIRMATION" = "y" ]; then
             echo -e "\n ----------------------------------- "
             echo -e "| Please select an available option |"
             echo -e " ----------------------------------- \n"
+            unset CounterArray
         fi
-        unset CounterArray
     done
+    unset CounterArray
 
     # EFI or bios partition
     echo -e "\n---------------------------------------------------------------------------------"
@@ -176,10 +177,11 @@ if [ "$CONFIRMATION" = "y" ]; then
                 echo -e "\n ----------------------------------- "
                 echo -e "| Please select an available option |"
                 echo -e " ----------------------------------- \n"
+                unset CounterArray
             fi
         done
-        unset CounterArray
     fi
+    unset CounterArray
 
     # EFI or bios partition
     echo -e "\n----------------------------------------------------------"
@@ -213,20 +215,20 @@ if [ "$CONFIRMATION" = "y" ]; then
                 # Delete item after selected
                 unset ArrStoragePath[$swappartition]
                 ArrStoragePath=( "${ArrStoragePath[@]}" )
-                # Restart counter
-                unset CounterArray
                 break
             else
                 printf "\033c"
                 echo -e "\n ----------------------------------- "
                 echo -e "| Please select an available option |"
                 echo -e " ----------------------------------- \n"
+                unset CounterArray
             fi
-            unset CounterArray
         done
     fi
+    unset CounterArray
 
 fi
+
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
 echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
