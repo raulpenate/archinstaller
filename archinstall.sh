@@ -69,7 +69,7 @@ while true; do
         echo -e " $CounterArray) $item"
     done
     #Reading the selected option
-    read -p "Select the keyboard layout --> " LayoutOption
+    read -p ":: Select the keyboard layout --> " LayoutOption
     ((LayoutOption--));
     #If option extist keep going, if not repeat
     if [[ "${ArrLayout[$LayoutOption]}" == qwerty ]]; then
@@ -87,6 +87,7 @@ while true; do
         #Restart counter
         unset CounterArray
     fi
+    unset CounterArray
 done
 
 # Adding more paralleldownloads
@@ -107,9 +108,9 @@ if [ "$CONFIRMATION" = "y" ]; then
     ArrStoragePath=( $(lsblk -np --output KNAME) )
 
     # Arch partition
-    lsblk
-    echo -e "\n----------------------------------------------\n"
     while true; do
+        lsblk
+        echo -e "\n----------------------------------------------\n"
         # Loop to display disks
         echo -e "Choose one option: "
         for item in "${ArrStoragePath[@]}"
@@ -117,7 +118,7 @@ if [ "$CONFIRMATION" = "y" ]; then
             ((CounterArray++))
             echo -e " $CounterArray) $item"
         done
-        read -p "Select the /dev/drive (number) where ARCH will be used ->  " ospartition
+        read -p ":: Select the /dev/drive (number) where ARCH will be used ->  " ospartition
         ((ospartition--))
         # If option extist keep going, if not repeat
         if [ -n "${ArrStoragePath[$ospartition]}" ]; then
@@ -128,27 +129,26 @@ if [ "$CONFIRMATION" = "y" ]; then
             unset ArrStoragePath[$ospartition]
             ArrStoragePath=( "${ArrStoragePath[@]}" )
             # Restart counter
-            unset CounterArray
             break
         else
             printf "\033c"
             echo -e "\n ----------------------------------- "
             echo -e "| Please select an available option |"
             echo -e " ----------------------------------- \n"
-            unset CounterArray
         fi
+        unset CounterArray
     done
 
     # EFI or bios partition
     echo -e "\n---------------------------------------------------------------------------------"
-    read -p "Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
+    read -p ":: Did you create an arguments\"EPI or BIOS partition\"? (y/n): " CONFIRMATION
     echo -e "\n---------------------------------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
 
-        printf "\033c"
-        lsblk
-        echo -e "\n----------------------------------------------\n"
         while true; do
+            printf "\033c"
+            lsblk
+            echo -e "\n----------------------------------------------\n"
             # Loop to display disks
             echo -e "Choose one option: "
             for item in "${ArrStoragePath[@]}"
@@ -156,7 +156,7 @@ if [ "$CONFIRMATION" = "y" ]; then
                 ((CounterArray++))
                 echo -e " $CounterArray) $item"
             done
-            read -p "Select the /dev/drive (number) where the BOOTLOADER will be used -> " bootpartition
+            read -p ":: Select the /dev/drive (number) where the BOOTLOADER will be used -> " bootpartition
             ((bootpartition--))
             # If option extist keep going, if not repeat
             if [ -n "${ArrStoragePath[$bootpartition]}" ]; then
@@ -168,23 +168,22 @@ if [ "$CONFIRMATION" = "y" ]; then
                 unset ArrStoragePath[$bootpartition]
                 ArrStoragePath=( "${ArrStoragePath[@]}" )
                 # Restart counter
-                unset CounterArray
                 break
             else
                 printf "\033c"
                 echo -e "\n ----------------------------------- "
                 echo -e "| Please select an available option |"
                 echo -e " ----------------------------------- \n"
-                unset CounterArray
             fi
         done
+        unset CounterArray
     fi
 
     # EFI or bios partition
-    read -p "Did you create a SWAP partition? (y/n): " CONFIRMATION
-    echo -e "\n---------------------------------------------------------------------------------"
+    echo -e "\n----------------------------------------------------------"
+    read -p ":: Did you create a SWAP partition? (y/n): " CONFIRMATION
+    echo -e "\n----------------------------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
-
         printf "\033c"
         lsblk
         echo -e "\n----------------------------------------------\n"
@@ -197,7 +196,7 @@ if [ "$CONFIRMATION" = "y" ]; then
                 echo -e " $CounterArray) $item"
             done
             echo -e "\n------------------------------------------------------------------------------"
-            read -p "Select the /dev/drive (number) where the SWAP will be used -> " swappartition
+            read -p ":: Select the /dev/drive (number) where the SWAP will be used -> " swappartition
             echo -e "\n------------------------------------------------------------------------------"
             ((swappartition--))
             # If option extist keep going, if not repeat
@@ -220,8 +219,8 @@ if [ "$CONFIRMATION" = "y" ]; then
                 echo -e "\n ----------------------------------- "
                 echo -e "| Please select an available option |"
                 echo -e " ----------------------------------- \n"
-                unset CounterArray
             fi
+            unset CounterArray
         done
     fi
 
@@ -278,7 +277,7 @@ echo -e "KEYMAP=KEYBOARDLAYOUT" >> /etc/vconsole.conf
 # creatinzathurag hostname
 printf "\033c"
 echo -e "----------------------------------------------------------"
-echo -e "Insert your HOSTNAME (or how you wanna name your computer) :"
+echo -e ":: Insert your HOSTNAME (or how you wanna name your computer) :"
 read -p "New hostname: " HOSTNAME
 # Create the hostname file:
 echo -e $HOSTNAME > /etc/hostname
@@ -325,22 +324,37 @@ systemctl start gdm.service
 localectl set-keymap KEYBOARDLAYOUT
 
 # Create your root password
-echo -e "\n-------------------------------------------------"
-echo -e "Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
-passwd
+while true; do
+    echo -e "\n-------------------------------------------------"
+    echo -e ":: Insert your PASSWORD for ROOT (AKA SUDO PASSWORD)"
+    passwd
+    echo -e "\n-------------------------------------"
+    read -p ":: Are you sure? (y/n): " CONFIRMATION
+    echo -e "\n-------------------------------------"
+    if [ "$CONFIRMATION" = "y" ]; then
+    break
+    done
+done
 
 # Create your user
 echo -e "\n---------------------------------------------------------------"
-echo -e "Insert your USERNAME (yes your username, will be added in wheel group)"
+echo -e ":: Insert your USERNAME (yes your username, will be added in wheel group)"
 read -p "--> " CREATEDUSERNAME
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 useradd -mG wheel -s /bin/zsh $CREATEDUSERNAME
 
 # Create a password for your user
-echo -e "\n--------------------------------------"
-echo -e "Insert the PASSWORD of $CREATEDUSERNAME"
-echo -e "Insert the PASSWORD of $CREATEDUSERNAME"
-passwd $CREATEDUSERNAME
+while true; do
+    echo -e "\n--------------------------------------"
+    echo -e ":: Insert the PASSWORD of $CREATEDUSERNAME"
+    passwd $CREATEDUSERNAME
+    echo -e "\n-------------------------------------"
+    read -p ":: Are you sure? (y/n): " CONFIRMATION
+    echo -e "\n-------------------------------------"
+    if [ "$CONFIRMATION" = "y" ]; then
+    break
+    done
+done
 
 # Verifying if is EFI or not to install GRUB
 echo -e "\n--------------------------------------"
@@ -386,16 +400,21 @@ exit
 # Setting my keyboard again as a KEYBOARDLAYOUT
 setxkbmap -layout us KEYBOARDLAYOUT
 echo "exec \"setxkbmap us -variant KEYBOARDLAYOUT\"" >> /etc/i3/config
+
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
-# Software needed for dotfiles:
-# Installing package with yay
-yay -Syy
-yay -S cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh visual-studio-code-bin \
-    nerd-fonts-roboto-mono p7zip-gui networkmanager-dmenu-git github-cli google-chrome
+
+# Installing packages with yay
+yay --noremovemake --noconfirm --nocleanmenu --nodiffmenu --noeditmenu --noupgrademenu -Syu  cava dunst mpd ncmpcpp polybar papirus-nord picom pywal-git feh visual-studio-code-bin nerd-fonts-roboto-mono p7zip-gui networkmanager-dmenu-git github-cli google-chrome
+    
 # Polybar Themes
 git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
 cd polybar-themes
 chmod +x setup.sh
 ./setup.sh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+# Cloning repo
+git clone --separate-git-dir=$HOME/.dotfiles git@github.com:raulpenate/.dotfiles.git tmpdotfiles
+rsync --recursive --verbose --exclude '.git' tmpdotfiles/ $HOME/
+rm -r tmpdotfiles
