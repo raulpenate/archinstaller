@@ -62,6 +62,7 @@ read -p "--> This is a personal script, use it by your own risk, press ENTER to 
 while true; do
     #Array of options
     declare -a ArrLayout=("qwerty" "colemak" "dvorak")
+    echo -e "\n"
     #Looping the array 
     for item in "${ArrLayout[@]}"
     do
@@ -69,7 +70,8 @@ while true; do
         echo -e " $CounterArray) $item"
     done
     #Reading the selected option
-    read -p ":: Select the keyboard layout --> " LayoutOption
+    
+    read -p "$BIYellow:: Select the keyboard layout -->$BIWhite " LayoutOption
     ((LayoutOption--));
     #If option extist keep going, if not repeat
     if [[ "${ArrLayout[$LayoutOption]}" == qwerty ]]; then
