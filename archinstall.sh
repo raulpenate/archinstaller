@@ -276,7 +276,7 @@ locale-gen
 echo -e "LANG=en_US.UTF-8" >> /etc/locale.conf
 
 # setting KEYBOARDLAYOUT as a main layout
-echo -e "KEYMAP=KEYBOARDLAYOUT" >> /etc/vconsole.conf
+echo -e "us" >> /etc/vconsole.conf
 
 # creatinzathurag hostname
 printf "\033c"
@@ -315,7 +315,7 @@ pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth pavucontrol
 ## Wifi
 pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
 ## Software of my preference
-pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
+pacman -S --noconfirm tilix alacritty kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
     picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance neofetch \
     zathura zathura-pdf-mupdf ffmpeg imagemagick \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
@@ -325,7 +325,7 @@ pacman -S --noconfirm tilix kitty firefox simplescreenrecorder obs-studio vlc pa
 systemctl enable NetworkManager
 systemctl enable gdm.service
 systemctl start gdm.service
-localectl set-keymap KEYBOARDLAYOUT
+localectl set-keymap us colemak KEYBOARDLAYOUT
 
 # Create your root password
 while true; do
@@ -402,8 +402,7 @@ exit
 #```````````````----------------------------------------------------------------------```````````````
 
 # Setting my keyboard again as a KEYBOARDLAYOUT
-setxkbmap -layout us KEYBOARDLAYOUT
-echo "exec \"setxkbmap us -variant KEYBOARDLAYOUT\"" >> /etc/i3/config
+localectl set-keymap us colemak KEYBOARDLAYOUT
 
 # Installing yay
 git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
@@ -422,3 +421,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 git clone --separate-git-dir=$HOME/.dotfiles git@github.com:raulpenate/.dotfiles.git tmpdotfiles
 rsync --recursive --verbose --exclude '.git' tmpdotfiles/ $HOME/
 rm -r tmpdotfiles
+
+# Setting keyboard layout in i3
+echo "exec \"setxkbmap us -variant KEYBOARDLAYOUT\"" >> /etc/i3/config
