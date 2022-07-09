@@ -337,7 +337,7 @@ while true; do
     echo -e "\n-------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
     break
-    done
+    fi 
 done
 
 # Create your user
@@ -357,7 +357,7 @@ while true; do
     echo -e "\n-------------------------------------"
     if [ "$CONFIRMATION" = "y" ]; then
     break
-    done
+    fi
 done
 
 # Verifying if is EFI or not to install GRUB
