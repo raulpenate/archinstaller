@@ -228,6 +228,8 @@ if [ "$CONFIRMATION" = "y" ]; then
     fi
     unset CounterArray
 
+else
+    exit 0
 fi
 
 
