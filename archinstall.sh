@@ -75,13 +75,13 @@ while true; do
     ((LayoutOption--));
     #If option extist keep going, if not repeat
     if [[ "${ArrLayout[$LayoutOption]}" == qwerty ]]; then
-        sed -i 'echo "exec \"setxkbmap us -variant KEYBOARDLAYOUT\"\" >> /etc/i3/config' archinstaller/archinstall.sh
+        sed -i 's/echo "exec \"setxkbmap us -variant KEYBOARDLAYOUT\"\" >> /etc/i3/config//' archinstaller/archinstall.sh
         sed -i 's/KEYBOARDLAYOUT/ /' archinstaller/archinstall.sh
         break
     elif [[ "${ArrLayout[$LayoutOption]}" == colemak ]]; then
         sed -i 's/KEYBOARDLAYOUT/colemak/' archinstaller/archinstall.sh
         break
-    elif [[ "${ArrLayout[$LayoutOption]}" == colemak ]]; then
+    elif [[ "${ArrLayout[$LayoutOption]}" == dvorak ]]; then
         sed -i 's/KEYBOARDLAYOUT/dvorak/' archinstaller/archinstall.sh
         break
     else
