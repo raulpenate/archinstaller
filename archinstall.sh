@@ -235,7 +235,7 @@ fi
 
 # Use the pacstrap script to install the base package, Linux kernel and firmware for common hardware:
 echo -e "\nUsing the pacstrap script to install the base package, Linux kernel and firmware for common hardware"
-pacstrap /mnt base linux linux-firmware vim sed
+pacstrap -K /mnt base linux linux-firmware vim sed
 
 # Generating an fstab file (use -U or -L to define by UUID or labels, respectively), in this case using -U
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -311,8 +311,6 @@ pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
 pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
 ## Gnome
 pacman -S --noconfirm gnome gdm
-# Plasma
-pacman -S --noconfirm xorg plasma kde-applications
 ## Fonts
 pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
 ## Grub stuff
@@ -322,7 +320,7 @@ pacman -S --noconfirm bluez bluez-utils blueman pulseaudio-bluetooth pavucontrol
 ## Wifi
 pacman -S --noconfirm networkmanager network-manager-applet wireless_tools wpa_supplicant
 ## Software of my preference
-pacman -S --noconfirm tilix alacritty kitty firefox simplescreenrecorder obs-studio vlc papirus-icon-theme git \
+pacman -S --noconfirm tilix alacritty kitty firefox obs-studio vlc papirus-icon-theme git \
     picom nitrogen feh pcmanfm ranger rofi zsh most lxappearance neofetch \
     zathura zathura-pdf-mupdf ffmpeg imagemagick \
     zip unzip unrar p7zip xdotool papirus-icon-theme brightnessctl \
