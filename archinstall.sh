@@ -93,7 +93,8 @@ done
 unset CounterArray
 
 # Adding more paralleldownloads
-sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 8/" /etc/pacman.conf
+sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 10/" /etc/pacman.conf
+sed -i "s/^#Color$/Color\nILoveCandy" /etc/pacman.conf
 
 # Use timedatectl to ensure the system clock is accurate:
 timedatectl set-ntp true
