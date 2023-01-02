@@ -312,6 +312,8 @@ pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xbacklight
 pacman -S --noconfirm i3-gaps dmenu nitrogen i3status
 ## Gnome
 pacman -S --noconfirm gnome gdm
+## Plasma
+pacman -S --noconfirm plasma plasma-wayland-session kde-applications 
 ## Fonts
 pacman -S --noconfirm noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono ttf-joypixels ttf-font-awesome
 ## Grub stuff
