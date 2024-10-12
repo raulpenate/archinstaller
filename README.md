@@ -1,5 +1,7 @@
 # Arch Installer
 
+![image](https://github.com/user-attachments/assets/78033c22-1dc2-4c33-99d8-d0dabcab9b21)
+
 This repository provides a simple script to install Arch Linux with ease. 
 
 Follow the instructions below to get started.
@@ -15,7 +17,11 @@ Follow the instructions below to get started.
 
 ## Installation Steps
 
-https://github.com/user-attachments/assets/582d2b1b-1cdf-4fa4-8973-e211b6efd493
+### Video Example
+
+https://github.com/user-attachments/assets/baff731f-3be2-4b3d-b307-6956b1a7067f
+
+### Steps
 
 1. **Update Package Database and Install Required Packages**
 
