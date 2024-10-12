@@ -1,29 +1,29 @@
 # Arch Installer
 
-This repository provides a simple script to install Arch Linux with ease. Follow the instructions below to get started.
+This repository provides a simple script to install Arch Linux with ease. 
 
-## Prerequisites
+Follow the instructions below to get started.
 
-Before running the installer, ensure you have the following commands available on your system:
-
-- `pacman`
-- `git`
-- `vim`
+### Features:
+- Automatically detects between `EFI` and `BIOS` before installing `grub`.
+- Uses `ext4` by default, creating the `boot` and `os` partitions, with an optional `swap`.
+- Comes with `i3 gaps`, `plasma`, and `gnome`, plus many basic utilities such as `bluetooth`, `network`, `htop`, `ranger`, etc.
+- You can customize the `.dotfiles` you want to install.
+- You can select between **QWERTY**, **AZERTY**, and **COLEMAK** layouts.
+- Just select the desired options.
+- You don't have to write the whole code by hand.
 
 ## Installation Steps
 
+https://github.com/user-attachments/assets/582d2b1b-1cdf-4fa4-8973-e211b6efd493
 
 1. **Update Package Database and Install Required Packages**
 
-   Open your terminal and run the following command to update the package database and install `git` and `vim`:
+   Run the following command to update the package database and install `git` and `vim`:
 
    ```bash
    pacman -Syy git vim
    ```
-
-
-https://github.com/user-attachments/assets/582d2b1b-1cdf-4fa4-8973-e211b6efd493
-
 
 2. **Clone the Repository**
 
