@@ -12,7 +12,6 @@ Before running the installer, ensure you have the following commands available o
 
 ## Installation Steps
 
-[video](https://youtu.be/m3-pjr-V83U)
 
 1. **Update Package Database and Install Required Packages**
 
@@ -21,6 +20,10 @@ Before running the installer, ensure you have the following commands available o
    ```bash
    pacman -Syy git vim
    ```
+
+
+https://github.com/user-attachments/assets/582d2b1b-1cdf-4fa4-8973-e211b6efd493
+
 
 2. **Clone the Repository**
 
